@@ -35,17 +35,19 @@
                             {% if user.is_subscribed %}
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-linkdropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ user.user_name }}
+                                    {{ user.user_name_kanji }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end"aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" {#TODO:1#} ="{% url 'user_detail' user.id %}">会員情報</a>
+                                    <a class="dropdown-item" {#TODO:1#} href="{% url 'user_detail' user.id %}">会員情報</a>
                                         {# href="{%url 'user_detail' user.id %}">会員情報</a>#}
                                     <a class="dropdown-item" {#TODO:2#} href="#">予約一覧</a>
                                         {# href="{% url 'reservation_list' %}">予約一覧</a>#}
                                     <a class="dropdown-item" {#TODO:3#} href="#">お気に入り一覧</a>
                                         {# href="{% url 'favorite_list' %}">お気に入り一覧</a>#}
+                                    {% comment %} <a class="dropdown-item"{#TODO:4#}href="#">お支払い方法</a>  {% endcomment %}
                                     <a class="dropdown-item" {#TODO:4#} href="{% url 'subscribe_payment' %}">お支払い方法</a>
                                         {# href="{%url 'subscribe_payment' %}">お支払い方法</a>#}
+                                    {% comment %} <a class="dropdown-item"{#TODO:5#}href="#">有料プラン解約</a> {% endcomment %}
                                     <a class="dropdown-item" {#TODO:5#} href="{% url 'subscribe_cancel' %}">有料プラン解約</a>
                                         {# href="{%url 'subscribe_cancel' %}">有料プラン解約</a>#}
                                     <div class="dropdown-divider"></div>
@@ -56,18 +58,18 @@
                                 {% if user.is_authenticated %}
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-linkdropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ user.user_name }}
+                                        {{ user.user_name_kanji }}
                                     </a>
-                                    {% comment %} <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">  {% endcomment %}
-                                        {% comment %} <a class="dropdown-item" {#TODO:6#} href="{% url 'user_detail' user.id %}">会員情報</a> {% endcomment %}
-                                        <a class="dropdown-item"{#TODO:6#}href="#">会員情報</a>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown"> 
+                                        <a class="dropdown-item" {#TODO:6#} href="{% url 'user_detail' user.id %}">会員情報</a>
+                                        {% comment %} <a class="dropdown-item"{#TODO:6#}href="#">会員情報</a> {% endcomment %}
                                         {#href="{% url 'user_detail' user.id %}">会員情報</a>#}
-                                        {% comment %} <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_register' %}">有料プラン登録</a> {% endcomment %}
-                                        <a class="dropdown-item"{#TODO:7#}href="#">有料プラン登録</a>
+                                        <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_register' %}">有料プラン登録</a>
+                                        {% comment %} <a class="dropdown-item"{#TODO:7#}href="#">有料プラン登録</a> {% endcomment %}
                                             {#href="{% url 'subscribe_register' %}">有料プラン登録</a>#}
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{% url 'account_logout' %}">ログアウト</a>
-                                   {% comment %} </div> {% endcomment %}
+                                    </div>
                                 </li>
                                 {% else %}
                                 <li class="nav-item">
