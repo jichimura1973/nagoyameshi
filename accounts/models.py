@@ -4,18 +4,18 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-# class Job(models.Model):
+class Job(models.Model):
     
-#     name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     
-#     class Meta:
-#         verbose_name_plural = "Job"
-#         # constraints = [
-#         #     models.UniqueConstraint(fields=['name'], name='unique_job')
-#         # ]
+    # class Meta:
+    #     verbose_name_plural = "Job"
+    #     # constraints = [
+    #     #     models.UniqueConstraint(fields=['name'], name='unique_job')
+    #     # ]
     
-#     def __str__(self):
-#          return self.name   
+    def __str__(self):
+         return self.name   
 
 class CustomUser(AbstractUser):
     GENDER_TYPES = (
@@ -29,8 +29,8 @@ class CustomUser(AbstractUser):
     # birthday = models.DateField("生年月日" ,auto_now=True)
     birthday = models.CharField("生年月日" , max_length=20, null=True, blank=True)
     gender = models.CharField("性別", max_length=50, choices=GENDER_TYPES, blank=True)
-    # job = models.ForeignKey(Job, on_delete=models.DO_NOTHING, blank=True, null=True)
-    job = models.CharField("職業", max_length=200, blank=True, null=True)
+    job = models.ForeignKey(Job, on_delete=models.DO_NOTHING, blank=True, null=True)
+    # job = models.CharField("職業", max_length=200, blank=True, null=True)
     
     # 有料会員情報
     is_subscribed = models.BooleanField(default=False, verbose_name="有料会員")

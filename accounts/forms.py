@@ -1,6 +1,6 @@
 from django import forms
 from allauth.account.forms import SignupForm, LoginForm
-from .models import CustomUser
+from .models import CustomUser, Job
 
 class MySignupForm(SignupForm):
     user_name_kanji = forms.CharField(max_length=255, label='氏名')
@@ -10,7 +10,8 @@ class MySignupForm(SignupForm):
     # phone_number = forms.CharField(max_length=255, label='電話番号')
     birthday = forms.CharField(max_length=255, label='誕生日')
     gender = forms.CharField(max_length=50, label="性別")
-    job = forms.CharField(max_length=255, label='職業')
+    # job = forms.CharField(max_length=255, label='職業')
+    job = forms.ModelChoiceField(label="職業", queryset=Job.objects.all())
     is_subscribed = forms.BooleanField(required=False)
     
     def __init__(self, *args, **kwargs):
@@ -22,7 +23,8 @@ class MySignupForm(SignupForm):
         # self.fields['phone_number'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '09012345678'})
         self.fields['birthday'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '19950401'})
         self.fields['gender'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '男性/女性'})
-        self.fields['job'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'エンジニア'})
+        # self.fields['job'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'エンジニア'})
+        forms.ModelChoiceField(label="職業", queryset=Job.objects.all())
         self.fields['email'].widget = forms.TextInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder':'taro.samurai@example.com'})
         self.fields['password1'].widget = forms.PasswordInput(attrs={'class':'form-control'})
         self.fields['password2'].widget = forms.PasswordInput(attrs={'class':'form-control'})
@@ -35,7 +37,8 @@ class MySignupForm(SignupForm):
         # user.phone_number = self.cleaned_data['phone_number']
         user.birthday = self.cleaned_data['birthday']
         user.gender = self.cleaned_data['gender']
-        user.job = self.cleaned_data['ßjob']
+        # user.job = self.cleaned_data['job']
+        user.job = Job.objects.get(id=self.cleaned_data['job'])
         user.save()
         return user
       
@@ -59,5 +62,6 @@ class UserUpdateForm(forms.ModelForm):
         # self.fields['phone_number'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '09012345678'})
         self.fields['birthday'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '19950401'})
         self.fields['gender'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '男性/女性'})
-        self.fields['job'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'エンジニア'})
+        # self.fields['job'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'エンジニア'})
+        forms.ModelChoiceField(label="職業", queryset=Job.objects.all())
         self.fields['email'].widget = forms.TextInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder':'taro.samurai@example.com'})

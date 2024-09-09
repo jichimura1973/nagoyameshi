@@ -1,4 +1,5 @@
 from allauth.account.adapter import DefaultAccountAdapter
+from .models import Job
 
 class AccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
@@ -10,6 +11,8 @@ class AccountAdapter(DefaultAccountAdapter):
         # user.phone_number = form.cleaned_data.get('phone_number')
         user.birthday = form.cleaned_data.get('birthday')
         user.gender = form.cleaned_data.get('gender')
-        user.job = form.cleaned_data.get('job')
+        # user.job = form.cleaned_data.get('job')
+        user.job = Job.objects.get(name=form.cleaned_data.get('job'))
+
         user.is_subscribed = form.cleaned_data.get('is_subscribed')
         user.save()
