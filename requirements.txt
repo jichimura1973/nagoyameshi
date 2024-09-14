@@ -1,7 +1,7 @@
 # asgiref==3.7.2
 # certifi==2023.5.7
 # charset-normalizer==3.1.0
-Django==4.2
+django==4.2
 django_allauth==0.45.0
 # filelock==3.12.1
 # fsspec==2023.6.0
