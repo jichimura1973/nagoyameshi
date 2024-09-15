@@ -41,8 +41,8 @@
         <div class="container nagoyameshi-container">
             <h2 class="mb-3">キーワードから探す</h2>
             {#TODO:1#}
-            <form method="GET" action="#" class="user-search-box">
-            {# <form method="GET" action="{% url 'restaurant_list' %}"class="user-search-box">#}
+            {% comment %} <form method="GET" action="#" class="user-search-box"> {% endcomment %}
+            <form method="GET" action="{% url 'restaurant_list' %}"class="user-search-box">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="店舗名・エリア・カテゴリ" name="keyword">
                     <input type="hidden" name="button_type"value="keyword">
@@ -93,7 +93,7 @@
                 {% if forloop.counter < 7 %}
                     <div class="col">
                         {#TODO:3#}
-                        <a href="#"{# <a href="{% url 'restaurant_list' %}?category={{category.name }}&button_type=category" #}class="card-link">
+                        <a href="{% url 'restaurant_list' %}?category={{category.name }}&button_type=category" class="card-link">
                             <div class="card text-white">
                                 {% comment %} {% if category.photo %}
                                     <img src="{{ category.photo.url }} " class="card-img vertical-card-image" alt="{{category.name }}">
