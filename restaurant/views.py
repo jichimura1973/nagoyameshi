@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from . import models
 from django.views import generic
+from django.db.models import Avg
+
+from . import models
 
 
 """ トップ画面 ====================================="""
@@ -44,4 +46,11 @@ class CompanyView(generic.TemplateView):
 class TermsView(generic.TemplateView):
     template_name = "layout/terms.html"
     
+class RestaurantDetailView(generic.DetailView):
+
+    """ レストラン詳細画面 ====================================="""
+    template_name = "restaurant/restaurant_detail.html"
+    model = models.Restaurant
+    
+
     

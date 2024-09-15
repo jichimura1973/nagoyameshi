@@ -12,9 +12,9 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Category"
         
-        constraints = [
-            models.UniqueConstraint(fields=['name'], name='unique_category_name')
-        ]
+        # constraints = [
+        #     models.UniqueConstraint(fields=['name'], name='unique_category_name')
+        # ]
     
     def __str__(self):
          return self.name   
@@ -33,7 +33,7 @@ class Restaurant(models.Model):
     price_max = models.PositiveIntegerField("予算上限", blank=True, null=True)
     price_min = models.PositiveIntegerField("予算下限", blank=True, null=True)
     rate = models.FloatField(verbose_name="レート", default=0.0)
-    # category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, null=True)
     created_at = models.DateTimeField("登録日", auto_now_add=True)
     updated_at = models.DateTimeField("更新日", auto_now_add=True)    
     deleted_at = models.DateTimeField("削除日", auto_now_add=True)
@@ -49,12 +49,12 @@ class Restaurant(models.Model):
 
 class RestaurantCategory(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.DO_NOTHING)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, null=True)
     
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['restaurant_id', 'category_id'], name='unique_category')
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=['restaurant_id', 'category_id'], name='unique_category')
+    #     ]
         
     def __str__(self):
         return self.restaurant.name
