@@ -78,7 +78,7 @@
                             <span class="fw-bold">郵便番号</span>
                         </div>
                         <div class="col">
-                            <span>{{ object.zip_code }}</span>
+                            <span>{{ object.postal_code|post }}</span>
                         </div>
                     </div>
                     <div class="row pb-2 mb-2 border-bottom">
@@ -112,7 +112,7 @@
                             <span class="fw-bold">座席数</span>
                         </div>
                         <div class="col">
-                            <span>{{ object.seats_number }}</span>
+                            <span>{{ object.seats_number|seat }}</span>
                         </div>
                     </div>
                     <div class="row pb-2 mb-4 border-bottom">

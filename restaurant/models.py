@@ -1,7 +1,7 @@
 import datetime
 
 from accounts.models import CustomUser
-from django.core.validators import MinLengthValidator, RegexValidator
+from django.core.validators import MinLengthValidator, RegexValidator, MaxValueValidator, MinValueValidator
 
 from django.db import models
 
@@ -23,6 +23,7 @@ class Category(models.Model):
 class Restaurant(models.Model):
     
     name = models.CharField("店名",max_length=200, blank=False, null=False)
+    description = models.CharField(verbose_name='説明', max_length=200, blank=True, null=True)
     postal_code_regex = RegexValidator(regex=r'^[0-9]+$', message = ("Postal Code must be entered in the format: '1234567'. Up to 7 digits allowed."))
     postal_code = models.CharField(validators=[postal_code_regex], max_length=7, verbose_name='郵便番号', blank=False, null=False) 
     address = models.CharField("住所", max_length=200)
@@ -33,6 +34,10 @@ class Restaurant(models.Model):
     price_max = models.PositiveIntegerField("予算上限", blank=True, null=True)
     price_min = models.PositiveIntegerField("予算下限", blank=True, null=True)
     rate = models.FloatField(verbose_name="レート", default=0.0)
+    min_varidator = MinValueValidator(0)
+    max_varidator = MaxValueValidator(1000)
+    seats_number = models.IntegerField("席数", blank=True, null=True, validators=[min_varidator, max_varidator])
+    close_day_of_week = models.CharField("定休日", max_length=50, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, null=True)
     created_at = models.DateTimeField("登録日", auto_now_add=True)
     updated_at = models.DateTimeField("更新日", auto_now_add=True)    

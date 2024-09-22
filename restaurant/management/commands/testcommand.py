@@ -8,7 +8,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         print('test')
-        filename = './restaurant/management/commands/dummy_restaurant.csv'
+        filename = './restaurant/management/commands/dummy_restaurant2.csv'
         with open(filename) as f:
             csvreader = csv.reader(f)
             i = 0
@@ -16,22 +16,29 @@ class Command(BaseCommand):
                 if i >= 2:
                     id = row[1]
                     name = row[2]
-                    postal_code = ''
+                    postal_code = row[12].replace("-","")
                     address = row[4]
                     tel_number = row[5]
                     price_max = int(row[9])
                     price_min = int(row[8])
                     category_name = row[3]
-                    
+                    close_day_of_week = row[7]
+                    seats_number = row[10]
+                    rate = row[11]
+                    description = row[13]
                     print('⭐️⭐️⭐️')
                     print(f'id:{id}')
                     print(f'name:{name}')
+                    print(f'description:{description}')
                     print(f'postal_code:{postal_code}')
                     print(f'address:{address}')
                     print(f'tel_number:{tel_number}')
                     print(f'price_max:{price_max}')
                     print(f'price_min:{price_min}')
                     print(f'category_name:{category_name}')
+                    print(f'seats_number:{seats_number}')
+                    print(f'close_day_of_werk:{close_day_of_week}')
+                    print(f'rate:{rate}')
             
         
                     if Category.objects.filter(name=category_name).exists() == False:
@@ -43,12 +50,16 @@ class Command(BaseCommand):
                     if Restaurant.objects.filter(name=name,postal_code=postal_code).exists() == False:
                         tmp_restaurant = Restaurant()
                         tmp_restaurant.name = name
+                        tmp_restaurant.description = description
                         tmp_restaurant.postal_code = postal_code
                         tmp_restaurant.address = address
                         tmp_restaurant.tel_number = tel_number
                         tmp_restaurant.price_max = price_max
                         tmp_restaurant.price_min = price_min
                         tmp_restaurant.category = tmp_category
+                        tmp_restaurant.close_day_of_week = close_day_of_week
+                        tmp_restaurant.seats_number = seats_number
+                        tmp_restaurant.rate = rate
                         
                         tmp_restaurant.save()
                     else:

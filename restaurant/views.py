@@ -65,8 +65,9 @@ class RestaurantListView(generic.ListView):
         # get input value
         keyword = self.request.GET.get('keyword')
         category = self.request.GET.get('category')
-        price = self.request.GET.get('price')
+        price = self.request.GET.get('price_max')
         select_sort = self.request.GET.get('select_sort')
+        print(select_sort)
         button_type = self.request.GET.get('button_type')
         keyword = keyword if keyword is not None else ''
         category = category if category is not None else ''
@@ -101,15 +102,22 @@ class RestaurantListView(generic.ListView):
         restaurant_list = restaurant_list.filter(category__name__icontains=category_session)
         
         if int(price_session) > 0:
-            restaurant_data = models.Restaurant.objects.values('id', 'price')
+            # restaurant_data = models.Restaurant.objects.values('id', 'price')
+            restaurant_data = models.Restaurant.objects.values('id', 'price_max', 'price_min')
             target_id_list = []
             for data in restaurant_data:
-                price_str = data['price']
-                price_str = price_str.replace('円', '')
-                price_str = price_str.replace(',', '')
-                price_list = price_str.split('～')
-            
-                if int(price_list[0]) <= int(price_session) <= int(price_list[1]):
+                
+                # price_str = data['price']
+                # price_str = price_str.replace('円', '')
+                # price_str = price_str.replace(',', '')
+                # price_list = price_str.split('～')
+                # if int(price_list[0]) <= int(price_session) <= int(price_list[1]):
+                
+                # if data['price_min'] is None:
+                #     data['price_min'] = 0
+                # if data['price_max'] is None:
+                #     data['price_max'] = 10000
+                if data['price_min'] <= int(price_session) <= data['price_max']:
                     target_id_list.append(data['id'])
             restaurant_list = restaurant_list.filter(id__in=target_id_list)
             

@@ -151,8 +151,11 @@
                             <option value="-created_at" {% if select_sort_session == "-created_at" %} selected{% endif %}>
                                 掲載日が新しい順
                             </option>
-                            <option value="price" {% if select_sort_session == "price" %}selected{% endif %}>
-                                価格が安い順
+                            <option value="price_max" {% if select_sort_session == "price_max" %}selected{% endif %}>
+                                最大価格が安い順
+                            </option>
+                            <option value="price_min" {% if select_sort_session == "price_min" %}selected{% endif %}>
+                                最低価格が安い順
                             </option>
                             <option value="-rate" {% if select_sort_session == "-rate" %}selected{% endif %}>
                                 評価が高い順
