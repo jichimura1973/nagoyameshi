@@ -8,6 +8,7 @@ from django.db import models
 class Category(models.Model):
     
     name = models.CharField(verbose_name="カテゴリー名", max_length=200)
+    photo = models.ImageField(verbose_name='写真', blank=True, null=True)
     
     class Meta:
         verbose_name_plural = "Category"
