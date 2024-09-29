@@ -40,6 +40,7 @@ class Restaurant(models.Model):
     seats_number = models.IntegerField("席数", blank=True, null=True, validators=[min_varidator, max_varidator])
     close_day_of_week = models.CharField("定休日", max_length=50, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, null=True)
+    photo = models.ImageField(verbose_name='写真', blank=True, null=True)
     created_at = models.DateTimeField("登録日", auto_now_add=True)
     updated_at = models.DateTimeField("更新日", auto_now_add=True)    
     deleted_at = models.DateTimeField("削除日", auto_now_add=True)

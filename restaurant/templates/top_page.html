@@ -96,9 +96,9 @@
                         {#TODO:3#}
                         <a href="{% url 'restaurant_list' %}?category={{category.name }}&button_type=category" class="card-link">
                             <div class="card text-white">
-                                {% comment %} {% if category.photo %}
+                                {% if category.photo %}
                                     <img src="{{ category.photo.url }} " class="card-img vertical-card-image" alt="{{category.name }}">
-                                {% endif %} {% endcomment %}
+                                {% endif %} 
                                 <div class="card-img-overlay d-flex justify-content-centeralign-items-center overlay-background">
                                     <h3 class="card-title category-name">{{ category.name}}</h3>
                                 </div>

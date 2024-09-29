@@ -1,4 +1,5 @@
 from django import template
+import datetime
 
 register = template.Library()
 
@@ -14,4 +15,24 @@ def post(val:str):
 @register.filter
 def seat(val:int):
     return f'{val}席'
- 
+
+@register.filter
+def honor(val):
+    return 'さん'
+
+@register.filter
+def honor2(val):
+    return f'{val} さん'
+
+@register.filter
+def greet(val):
+    greeting = 'ようこそ'
+    now = datetime.datetime.now()
+    if now.hour <= 8:
+        greeting = 'おはようございます'
+    elif now.hour <= 18:
+        greeting = 'こんにちは'
+    else:
+        greeting = 'こんばんは'
+    
+    return f'{greeting}'

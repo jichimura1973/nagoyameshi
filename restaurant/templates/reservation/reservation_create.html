@@ -42,8 +42,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link link-dark"{# TODO:1#} href="#">レビュー</a>
-                        {# href="{% url 'review_list' restaurant.id %}">レビュー</a>#}
+                        <a class="nav-link link-dark"{# TODO:1#} href="{% url 'review_list' restaurant.id %}">
+                            レビュー
+                        </a>
                     </li>
                 </ul>
                 <form method="POST" enctype='multipart/form-data'>
