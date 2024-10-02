@@ -57,8 +57,10 @@
         <h2 class="mb-3">評価が高いお店</h2>
         <div class="row row-cols-xl-6 row-cols-md-3 row-cols-2 g-3 mb-5">
         {#TODO:6#}
-            {% for restaurant in restaurant_list %}
-                {# {% for restaurant,rate,rate_star in restaurant_list %}#}
+        {% comment %} {% for restaurant,rate,rate_star in restaurant_list %} {% endcomment %}
+        {% for restaurant,rate,rate_star,rate_num in restaurant_list %}
+            {% if forloop.counter < 7 %}
+                
                 <div class="col">
                 {#TODO:2#}
                     {% comment %} <a href="#" class="link-dark card-link"> {% endcomment %}
@@ -76,16 +78,15 @@
                                 </div>
                                 <p class="card-text">
                                     {#TODO:7#}
-                                    <span class="star-rating me-1"data-rate="5"></span>
-                                    5.0
-                                    {# <span class="star-rating me-1" data-rate="{{rate_star }}"></span>#}
-                                    {# {{ rate }}#}
+                                    <span class="star-rating me-1" data-rate="{{rate_star }}"></span>
+                                    {{ rate }}（{{rate_num}}件）
                                 </p>
                             </div>
                         </div>
                     </a>
                 </div>
-            {% endfor %}
+            {% endif %}
+        {% endfor %}
         </div>
         {# カテゴリから探す #}
         <h2 class="mb-3">カテゴリから探す</h2>
@@ -112,7 +113,11 @@
             {% for category in category_list %}
                 {% if forloop.counter > 6 %}
                     {#TODO:4#}
-                    <a href="#"class="btn btn-outline-secondary btn-sm me-1 mb-2">{{category.name }}</a>
+                    <a href="{% url 'restaurant_list' %}?category={{category.name }}&button_type=category"class="btn btn-outline-secondary btn-sm me-1 mb-2">{{category.name }}</a>
+                    {% comment %} <a href="{% url 'restaurant_list' %}?category={{category.name }}&button_type=category" class=btn btn-outline-secondary btn-sm me-1 mb-2>{{category.name }}</a> {% endcomment %}
+                    
+                    {% comment %} <a href="{% url 'restaurant_list' %}?category={{category.name }}&button_type=category" class="card-link"></a> {% endcomment %}
+                        
                 {% endif %}
             {% endfor %}
         </div>
@@ -120,26 +125,28 @@
         <h2 class="mb-3">新規掲載店</h2>
         <div class="row row-cols-xl-6 row-cols-md-3 row-cols-2 g-3 mb-5">
             {% for new_restaurant in new_restaurant_list %}
-                <div class="col">
-                    {#TODO:5#}
-                    {% comment %} <a href="#" class="link-dark card-link"> {% endcomment %}
-                    <a href="{% url 'restaurant_detail' new_restaurant.id%}" class="link-dark card-link">
-                        <div class="card h-100">
-                            {% if new_restaurant.photo %}
-                                <img src="{{ new_restaurant.photo.url }}" class="card-img-top vertical-card-image">
-                            {% endif %}
-                            <div class="card-body">
-                                <h3 class="card-title">{{ new_restaurant.name}}</h3>
-                                <div class="text-muted small mb-1">
-                                    <div class="d-inline-block">
-                                    {{ new_restaurant.category }}
+                {% if forloop.counter < 7 %}
+                    <div class="col">
+                        {#TODO:5#}
+                        {% comment %} <a href="#" class="link-dark card-link"> {% endcomment %}
+                        <a href="{% url 'restaurant_detail' new_restaurant.id%}" class="link-dark card-link">
+                            <div class="card h-100">
+                                {% if new_restaurant.photo %}
+                                    <img src="{{ new_restaurant.photo.url }}" class="card-img-top vertical-card-image">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h3 class="card-title">{{ new_restaurant.name}}</h3>
+                                    <div class="text-muted small mb-1">
+                                        <div class="d-inline-block">
+                                        {{ new_restaurant.category }}
+                                        </div>
                                     </div>
+                                    <p class="card-text">{{ new_restaurant.description|truncatechars:20 }}</p>
                                 </div>
-                                <p class="card-text">{{ new_restaurant.description|truncatechars:20 }}</p>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                {% endif%}
             {% endfor %}
         </div>
     </div>

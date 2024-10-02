@@ -36,9 +36,46 @@ class TopPageView(generic.ListView):
         context = super(TopPageView, self).get_context_data(**kwargs)
         category_list = models.Category.objects.all()
         new_restaurant_list = models.Restaurant.objects.all().order_by('-created_at')
+        restaurant_list = models.Restaurant.objects.all()
+        
+        # querysetに含まれるレストランの平均レートを、レストランごとに取得して配列に格納
+        average_rate_list = []
+        average_rate_star_list = []
+        rate_num_list = []
+        
+        # for restaurant in context['restaurant_list']:
+        for restaurant in restaurant_list:
+            average_rate = models.Review.objects.filter(restaurant=restaurant).aggregate(Avg('rate'))
+            average_rate = average_rate['rate__avg'] if average_rate['rate__avg'] is not None else 0
+            average_rate_list.append(round(average_rate, 2))
+            rate_num = models.Review.objects.filter(restaurant=restaurant).count()
+            rate_num_list.append(rate_num)
+            
+            if average_rate % 1 == 0:
+                average_rate = int(average_rate)
+            else:
+                average_rate = round(average_rate * 2) / 2
+        
+            average_rate_star_list.append(average_rate)
+
+            # print('⭐️⭐️⭐️')
+            # print(restaurant.name)
+            # print(average_rate_list)
+            # print('🤩🤩🤩🤩🤩🤩🤩')
+            # print(average_rate_star_list)
+            # print(self.queryset)
+        tmp_restaurat_list = zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list)
+        tmp_list = (list(tmp_restaurat_list))
+        tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1], x[3]))
+        
+        # print(tmp_list)
+        
         context.update({
             'category_list': category_list,
             'new_restaurant_list': new_restaurant_list,
+            # 'restaurant_list': zip(self.queryset, average_rate_list, average_rate_star_list),
+            # 'restaurant_list': zip(restaurant_list, average_rate_list, average_rate_star_list),
+            'restaurant_list': tmp_list,
         })
         return context
     
@@ -123,7 +160,6 @@ class RestaurantListView(generic.ListView):
                 if data['price_min'] <= int(price_session) <= data['price_max']:
                     target_id_list.append(data['id'])
             restaurant_list = restaurant_list.filter(id__in=target_id_list)
-            
         # 表示順
         restaurant_list = restaurant_list.order_by(select_sort_session)
         category_list = models.Category.objects.all()
@@ -138,6 +174,7 @@ class RestaurantListView(generic.ListView):
             average_rate = average_rate['rate__avg'] if average_rate['rate__avg'] is not None else 0
             
             average_rate_list.append(round(average_rate, 2))
+            
             if average_rate % 1 == 0:
                 average_rate = int(average_rate)
             else:
@@ -145,15 +182,20 @@ class RestaurantListView(generic.ListView):
             average_rate_star_list.append(average_rate)
             rate_num = models.Review.objects.filter(restaurant=restaurant).count()
             rate_num_list.append(rate_num)
-            
+         
+        tmp_restaurat_list = zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list)
+        tmp_list = (list(tmp_restaurat_list))
+        tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1], x[3]))
+        
+        
         context.update({
             'category_list': category_list,
             'keyword_session': keyword_session,
             'category_session': category_session,
             'price_session': price_session,
             'select_sort_session': select_sort_session,
-            'restaurant_list': zip(restaurant_list, average_rate_list,
-            average_rate_star_list, rate_num_list),
+            # 'restaurant_list': zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list),
+            'restaurant_list': tmp_list,
         })
         
         return context
@@ -464,3 +506,60 @@ class ReviewCreateView(generic.CreateView):
         })
         
         return context
+    
+
+class ReviewUpdateView(generic.UpdateView):
+    """ レビューの更新 ================================== """
+    model = models.Review
+    template_name = 'review/review_update.html'
+    form_class = forms.ReviewCreateForm
+    
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        restaurant_id = models.Review.objects.filter(id=pk).first().restaurant.id
+        return reverse_lazy('review_list', kwargs={'pk': restaurant_id})
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
+        context = super(ReviewUpdateView, self).get_context_data(**kwargs)
+        restaurant_id = models.Review.objects.filter(id=pk).first().restaurant.id
+        restaurant = models.Restaurant.objects.filter(id=restaurant_id).first()
+        average_rate = models.Review.objects.filter(restaurant=restaurant).aggregate(Avg('rate'))
+        average_rate = average_rate['rate__avg'] if average_rate['rate__avg'] is not None else 0
+        average_rate = round(average_rate, 2)
+
+        if average_rate % 1 == 0:
+            average_rate_star = int(average_rate)
+        else:
+            average_rate_star = round(average_rate * 2) / 2
+        
+        rate_count = models.Review.objects.filter(restaurant=restaurant).count()
+        
+        context.update({
+            'restaurant': restaurant,
+            'average_rate': average_rate,
+            'average_rate_star': average_rate_star,
+            'rate_count': rate_count,
+            })
+        return context
+    
+def review_delete(request):
+    """ レビューの削除 ================================== """
+    pk = request.GET.get('pk')
+    is_success = True
+    
+    if pk:
+        try:
+            models.Review.objects.filter(id=pk).delete()
+        except:
+            is_success = False
+    else:
+        is_success = False
+    
+    return JsonResponse({'is_success': is_success})

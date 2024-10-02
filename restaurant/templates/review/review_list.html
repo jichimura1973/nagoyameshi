@@ -74,14 +74,17 @@
                         <div class="card-header d-flex justify-content-between">
                             <div>
                                 {{ review.user.user_name_kanji}}{{ review.user.user_name_kanji|honor }}
-                                （利用日：{{review.visited_at}}）
+                                <div class="text-muted small mb-1">
+                                    （利用日：{{review.visited_at}}）
+                                </div>
                             </div>
                             {% if review.user.user_name_kanji == user.user_name_kanji %}
                                 <div>
                                     {# TODO:1#}
-                                    <a href="#" {# <a href="{% url 'review_update' review.id %}"#} class="me-2">
+                                    <a href="{% url 'review_update' review.id %}" class="me-2">
                                         編集
                                     </a>
+                                    <BR>
                                     <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#deleteReviewModal" data-review-id="{{ review.id }}">
                                         削除
                                     </a>
