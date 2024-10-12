@@ -37,9 +37,9 @@ class CustomUser(AbstractUser):
     card_name = models.CharField(max_length=128, null=True, blank=True, verbose_name="カード名義")
     card_number = models.CharField(max_length=128, null=True, blank=True, verbose_name="カード番号")
     
-    # created_at = models.DateTimeField("登録日", auto_now_add=True)
-    # updated_at = models.DateTimeField("更新日", auto_now_add=True)    
-    # deleted_at = models.DateTimeField("削除日", auto_now_add=True)
+    # created_day = models.DateTimeField("登録日", auto_now_add=True)
+    # updated_day = models.DateTimeField("更新日", auto_now_add=True)    
+    # deleted_day = models.DateTimeField("削除日", auto_now_add=True)
     
     # class Meta:
     #     constraints = [

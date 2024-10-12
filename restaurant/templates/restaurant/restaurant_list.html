@@ -1,5 +1,6 @@
 {% extends "layout/base.html" %}
 {% load static %}
+{% load custom_tag %}
 {% block title %}NAGOYAMESHI{% endblock %}
 {% block content %}
 <main>
@@ -167,7 +168,7 @@
                         <input type="hidden" name="button_type" value="select_sort">
                     </form>
                 </div>
-                {% for restaurant,rate,rate_star,rate_num in restaurant_list %}
+                {% for restaurant,rate,rate_star,rate_num,reservation_num in restaurant_list %}
                     <div class="mb-3">
                         <a href="{% url 'restaurant_detail' restaurant.id%}" class="link-dark card-link">
                             <div class="card h-100">
@@ -183,6 +184,12 @@
                                             <div class="col d-flex text-secondary">
                                                 <div>
                                                     {{ restaurant.category}}
+                                                {% if select_sort_session == "-reservation_num" %}
+                                                    <hr class="my-2">
+                                                    <div class="mb-1">
+                                                        {{reservation_num|reserve}}
+                                                    </div>
+                                                {% endif %}
                                                 </div>
                                             </div>
                                             <hr class="my-2">

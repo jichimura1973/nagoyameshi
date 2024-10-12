@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.db.models import Q
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.http import JsonResponse
 
 from . import models
@@ -15,7 +15,6 @@ from . import forms
 """ トップ画面 ====================================="""
 
 class TopPageView(generic.ListView):
-    return 'Hello World'
     template_name = "top_page.html"
     model = models.Restaurant
     
@@ -165,18 +164,21 @@ class RestaurantListView(generic.ListView):
         if select_sort_session != '-reservation_num':
             restaurant_list = restaurant_list.order_by(select_sort_session)
         else:
-            reservation_restaurant_list = models.Reservation.objects.filter(~Q(status='予約取消')).values("restaurant")#.annotate(count=sum(restaurant)) #.order_by('count')
-            for reservation in reservation_restaurant_list:
-                # print('⭐️⭐️')
-                # print(reservation.restaurant.name)
-                # print(f'{reservation["restaurant"]}')
-                reservation_num = len(models.Reservation.objects.filter(restaurant=reservation["restaurant"]))        
-                print('⭐️⭐️')
-                print(reservation_num)
+            reservation_list = models.Reservation.objects.filter(~Q(status='予約取消')).values("restaurant").annotate(num_reservation=Count("restaurant")).order_by('-num_reservation')
+            restaurant_list = []
+            
+            for reservation in reservation_list:
+                reservation_restaurant = models.Reservation.objects.filter(restaurant=reservation["restaurant"])     
+                # reservation_num = models.Reservation.objects.filter(restaurant=reservation["restaurant"]).count()        
+                restaurant = models.Restaurant.objects.get(name=reservation_restaurant[0])
+                restaurant_list.append(restaurant)
+                # reservation_num_list.append(reservation_num)
+        
+            # tmp_restaurat_list = zip(restaurant_list, reservation_num_list)
+            # tmp_list = (list(tmp_restaurat_list))
+            # tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1]))    
                 
-                # for restaurant_obj in reservation_num:
-                #     print('⭐️⭐️')
-                #     print(restaurant_obj.restaurant.name)
+                
                     
         
         category_list = models.Category.objects.all()
@@ -185,7 +187,8 @@ class RestaurantListView(generic.ListView):
         average_rate_list = []
         average_rate_star_list = []
         rate_num_list = []
-        
+        reservation_num_list = []
+            
         for restaurant in restaurant_list:
             average_rate = models.Review.objects.filter(restaurant=restaurant).aggregate(Avg('rate'))
             average_rate = average_rate['rate__avg'] if average_rate['rate__avg'] is not None else 0
@@ -199,12 +202,20 @@ class RestaurantListView(generic.ListView):
             average_rate_star_list.append(average_rate)
             rate_num = models.Review.objects.filter(restaurant=restaurant).count()
             rate_num_list.append(rate_num)
-        
-        tmp_restaurat_list = zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list)
+            
+            if select_sort_session == '-reservation_num':
+                reservation_num = models.Reservation.objects.filter(restaurant=restaurant).count()        
+                reservation_num_list.append(reservation_num)
+            else:
+                reservation_num_list.append(0)
+                    
+        tmp_restaurat_list = zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list, reservation_num_list)
         tmp_list = (list(tmp_restaurat_list))
         if select_sort_session == '-rate':   
             tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1], x[3]))
-        
+        elif select_sort_session == '-reservation_num':
+            tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[4]))
+            
         context.update({
             'category_list': category_list,
             'keyword_session': keyword_session,

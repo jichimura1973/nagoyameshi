@@ -25,6 +25,10 @@ def honor2(val):
     return f'{val} さん'
 
 @register.filter
+def reserve(val):
+    return f'予約件数 {val}件'
+
+@register.filter
 def greet(val):
     greeting = 'ようこそ'
     now = datetime.datetime.now()
