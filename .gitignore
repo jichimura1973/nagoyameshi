@@ -5,8 +5,8 @@
 *.pot
 *.pyc
 *.csv
-__pycache__
+**/__pycache__/**
 local_settings.py
-db.sqlite3
-media
+# db.sqlite3
+# media
 .is_debug

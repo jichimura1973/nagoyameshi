@@ -15,6 +15,7 @@ from . import forms
 """ トップ画面 ====================================="""
 
 class TopPageView(generic.ListView):
+    return 'Hello World'
     template_name = "top_page.html"
     model = models.Restaurant
     

@@ -63,7 +63,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+
 
 
 if DEBUG:
@@ -74,6 +77,8 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
     }
+
+
 
 ROOT_URLCONF = "nagoyameshi.urls"
 
@@ -191,3 +196,6 @@ ACCOUNT_FORMS = {
 'login': 'accounts.forms.MyLoginForm',
 'signup': 'accounts.forms.MySignupForm',
 }
+
+if DEBUG == False:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
