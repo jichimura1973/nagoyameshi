@@ -1,5 +1,6 @@
 {% extends "layout/base.html" %}
 {% load static %}
+{% load custom_tag %}
 {% block title %}NAGOYAMESHI{% endblock %}
 {% block content %}
 <main>
@@ -51,11 +52,11 @@
                         {% for favorite in object_list %}
                         <tr>
                             <td>
-                                <a href="{% url 'restaurant_detail'favorite.restaurant.id %}">
+                                <a href="{% url 'restaurant_detail' favorite.restaurant.id %}">
                                 {{ favorite.restaurant.name }}
                                 </a>
                             </td>
-                            <td>{{ favorite.restaurant.zip_code }}</td>
+                            <td>{{ favorite.restaurant.postal_code|post }}</td>
                             <td> {{ favorite.restaurant.address }}</td>
                             <td>
                                 <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#removeFavoriteModal" data-favorite-id="{{ favorite.id }}" data-restaurant-name=" {{favorite.restaurant.name }}">

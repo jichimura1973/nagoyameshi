@@ -69,8 +69,28 @@
                             {% endfor %}
                         </div>
                     </div>
+                    <div class="mb-3">
+                        {% comment %} <label class="form-label text-md-left fw-bold">
+                            来店日
+                        </label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                {{ visited_at }}
+                            </div>
+                        </div> {% endcomment %}
+
+                        <div class="form-group row mb-3">
+                            <label for="content" class="col-md-5 col-form-label text-md-left fw-bold">
+                                利用日
+                            </label>
+                            <div class="col-md-7">
+                                {{ form.visited_at }}
+                            </div>
+                        </div>
+                        
+                    </div>
                     <div class="mb-4">
-                        <label for="content" class="form-label text-md-leftfw-bold">
+                        <label for="content" class="form-label text-md-left fw-bold">
                             感想
                         </label>
                         <div>

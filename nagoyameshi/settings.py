@@ -24,9 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-vuqt5t8+n7q530-#7)^l7b=z4z54r8k^#5ozd!##yfe+mzz&l7"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+if os.path.exists('./.is_debug'):
+    DEBUG = True
+else:
+    DEBUG = False
+    
+ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com', '*']
+# ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -48,6 +52,9 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
 ]
 
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -57,6 +64,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+
+if DEBUG:
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    # 追加
+    INTERNAL_IPS = ['127.0.0.1']
+    # 追加
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
+    }
 
 ROOT_URLCONF = "nagoyameshi.urls"
 

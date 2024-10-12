@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import datetime
 
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -105,9 +106,8 @@ class RestaurantListView(generic.ListView):
         # get input value
         keyword = self.request.GET.get('keyword')
         category = self.request.GET.get('category')
-        price = self.request.GET.get('price_max')
+        price = self.request.GET.get('price')
         select_sort = self.request.GET.get('select_sort')
-        print(select_sort)
         button_type = self.request.GET.get('button_type')
         keyword = keyword if keyword is not None else ''
         category = category if category is not None else ''
@@ -161,9 +161,25 @@ class RestaurantListView(generic.ListView):
                     target_id_list.append(data['id'])
             restaurant_list = restaurant_list.filter(id__in=target_id_list)
         # 表示順
-        restaurant_list = restaurant_list.order_by(select_sort_session)
+        if select_sort_session != '-reservation_num':
+            restaurant_list = restaurant_list.order_by(select_sort_session)
+        else:
+            reservation_restaurant_list = models.Reservation.objects.filter(~Q(status='予約取消')).values("restaurant")#.annotate(count=sum(restaurant)) #.order_by('count')
+            for reservation in reservation_restaurant_list:
+                # print('⭐️⭐️')
+                # print(reservation.restaurant.name)
+                # print(f'{reservation["restaurant"]}')
+                reservation_num = len(models.Reservation.objects.filter(restaurant=reservation["restaurant"]))        
+                print('⭐️⭐️')
+                print(reservation_num)
+                
+                # for restaurant_obj in reservation_num:
+                #     print('⭐️⭐️')
+                #     print(restaurant_obj.restaurant.name)
+                    
+        
         category_list = models.Category.objects.all()
-            
+        
         # querysetに含まれるレストランの平均レートを、レストランごとに取得して配列に格納
         average_rate_list = []
         average_rate_star_list = []
@@ -182,11 +198,11 @@ class RestaurantListView(generic.ListView):
             average_rate_star_list.append(average_rate)
             rate_num = models.Review.objects.filter(restaurant=restaurant).count()
             rate_num_list.append(rate_num)
-         
+        
         tmp_restaurat_list = zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list)
         tmp_list = (list(tmp_restaurat_list))
-        tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1], x[3]))
-        
+        if select_sort_session == '-rate':   
+            tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1], x[3]))
         
         context.update({
             'category_list': category_list,
@@ -283,7 +299,8 @@ class FavoriteListView(generic.ListView):
     
     def get_queryset(self):
         user_id = self.request.user.id
-        queryset = models.FavoriteRestaurant.objects.filter(user_id=user_id).order_by('-created_at')
+        # queryset = models.FavoriteRestaurant.objects.filter(user_id=user_id).order_by('-created_at')
+        queryset = models.FavoriteRestaurant.objects.filter(user_id=user_id)#.order_by('-created_at')
         
         return queryset
     
@@ -326,6 +343,7 @@ class ReservationCreateView(generic.CreateView):
         reservation = form.save(commit=False)
         reservation.user = user_instance
         reservation.restaurant = restaurant_instance
+        reservation.status = '予約受付'
         reservation.save()
         
         return super().form_valid(form)
@@ -362,19 +380,19 @@ class ReservationCreateView(generic.CreateView):
 
     def make_close_list(self, close_day):
         close_list = []
-        if '月' in close_day:
+        if '月曜日' in close_day:
             close_list.append(1)
-        if '火' in close_day:
+        if '火曜日' in close_day:
             close_list.append(2)
-        if '水' in close_day:
+        if '水曜日' in close_day:
             close_list.append(3)
-        if '木' in close_day:
+        if '木曜日' in close_day:
             close_list.append(4)
-        if '金' in close_day:
+        if '金曜日' in close_day:
             close_list.append(5)
-        if '土' in close_day:
+        if '土曜日' in close_day:
             close_list.append(6)
-        if '日' in close_day:
+        if '日曜日' in close_day:
             close_list.append(0)
         
         return close_list
@@ -386,14 +404,20 @@ class ReservationListView(generic.ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset =models.Reservation.objects.filter(user_id=self.request.user.id).order_by('-date')
-        
+        queryset =models.Reservation.objects.filter(user_id=self.request.user.id).order_by('-reservation_date')
+        print('🤩🤩🤩🤩')
+        for rest in queryset:
+            print(f'restaurant:{rest.restaurant.name} reservation:{rest.reservation_date}')
+            print(type(rest.reservation_date))
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(ReservationListView, self).get_context_data(**kwargs)
-        context.update({'today': date.today(),})
-
+        context.update({'today': datetime.today().astimezone(),})
+        print('⭐️⭐️⭐️⭐️')
+        print(datetime.today().astimezone())
+        print(type(datetime.today().astimezone()))
+        
         return context
     
 def reservation_delete(request):

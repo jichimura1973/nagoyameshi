@@ -51,20 +51,20 @@
                     {% csrf_token %}
                     <div class="form-group row mb-3">
                         <label for="reservation_date" class="col-md-5 col-form-label text-md-left fw-bold">
-                            予約日
+                            予約日時
                         </label>
                         <div class="col-md-7">
-                            {{ form.date }}
+                            {{ form.reservation_date }}
                         </div>
                     </div>
-                    <div class="form-group row mb-3">
+                    {% comment %} <div class="form-group row mb-3">
                         <label for="reservation_time" class="col-md-5 col-form-label text-md-left fw-bold">
                             時間
                         </label>
                         <div class="col-md-7">
-                            {{ form.time }}
+                            {{ form.reservation_time }}
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                     <div class="form-group row mb-4">
                         <label for="number_of_people" class="col-md-5 col-form-label text-md-left fw-bold">
                             人数
@@ -88,16 +88,63 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 <script>
+
+    //祝日一覧をAPIから取得する
+    function fetchHolidays() {
+        const today = new Date();
+        const year  = today.getFullYear();
+        return fetch(`https://holidays-jp.github.io/api/v1/${year}/date.json`)
+        .then((res) => {
+        if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+        }
+        return res.json();
+        })
+        .then((json) => {
+        return json;
+        })
+        .catch((reason) => {
+        console.error(reason);
+        });
+    }
+
+    //祝日の場合にクラスをつける
+    function addHolidayClass(dayElem, holidays){
+        const date      = dayElem.dateObj;
+        console.log(date)
+        
+        const selectDay = formatDate(date);
+        if(selectDay in holidays){
+        dayElem.classList.add('is-holiday');
+        }
+    }
+
     const restaurantRegularHolidays = {{ close_day_list }};
     flatpickr('#reservation_date', {
         locale: 'ja',
         minDate: 'today',
         maxDate: new Date().fp_incr(60),
+        {% comment %} onDayCreate : (dObj, dStr, fp, dayElem) => {
+            this.addHolidayClass(dayElem);
+          } , {% endcomment %}
+
+        enableTime: true,
+        minTime: '12:00',
+        maxTime: '20:00',
         disable: [
             function (date) {
             return restaurantRegularHolidays.includes(date.getDay());
             }
         ]
+        
+        
+
+        {% comment %} const selectDate = this.formatDate(selectedDates[0]);
+        if (selectedDates[0].getDay() === 0){
+            instance.set('minTime','13:00');
+            instance.set('maxTime','22:00');
+        } {% endcomment %}
+
     });
 </script>
 {% endblock %}
