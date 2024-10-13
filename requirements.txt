@@ -9,7 +9,7 @@ defusedxml==0.7.1
 Django==4.2.16
 django-allauth==0.50.0
 idna==3.8
-oauthli==3.2.2
+oauthlib==3.2.2
 pip==22.0.4
 pillow==8.3.2
 pycparser==2.22
