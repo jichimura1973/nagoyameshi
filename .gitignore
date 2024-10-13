@@ -9,4 +9,4 @@
 local_settings.py
 # db.sqlite3
 # media
-.is_debug
+# .is_debug
