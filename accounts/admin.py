@@ -7,7 +7,7 @@ class JobAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_name_kanji', 'job', 'gender')
+    list_display = ('id', 'user_name_kanji', 'job', 'gender', 'updated_day')
     search_fields = ('user_name_kanji', 'job', 'gender')
 
 admin.site.register(CustomUser, CustomUserAdmin)

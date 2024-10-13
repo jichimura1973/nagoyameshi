@@ -13,7 +13,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         print('test')
-        filename = './accounts/management/commands/dummy_user2.csv'
+        filename = './accounts/management/commands/dummy_user3.csv'
         with open(filename) as f:
             csvreader = csv.reader(f)
             i = 0
@@ -35,14 +35,14 @@ class Command(BaseCommand):
                 
                 email = row[7]
                 
-                basedate = datetime.datetime(2024,10,12,0,0,0)
-                n = math.floor(random.random()*1500)
+                basedate = datetime.datetime(2024,10,12,0,0,0,tzinfo=datetime.timezone(datetime.timedelta(seconds=32400)))
+                n = math.floor(random.random()*365*5)
                 
-                created_at = basedate - datetime.timedelta(days=n)
+                created_day = basedate - datetime.timedelta(days=n)
                 
                 n2 = math.floor(random.random()*n)
                 
-                updated_at = created_at + datetime.timedelta(days=n2)
+                updated_day = created_day + datetime.timedelta(days=n2)
                 
                 print('⭐️⭐️⭐️')
                 # print(f'id:{id}')
@@ -52,8 +52,8 @@ class Command(BaseCommand):
                 print(f'gender:{gender}')
                 print(f'job_name:{job_name}')
                 print(f'email:{email}')
-                print(f'created_at:{created_at}')
-                print(f'updated_at:{updated_at}')
+                print(f'created_at:{created_day}')
+                print(f'updated_at:{updated_day}')
                 
                 if Job.objects.filter(name=job_name).count() == 1:
                     tmp_job = Job.objects.get(name=job_name)
@@ -65,8 +65,8 @@ class Command(BaseCommand):
                         tmp_user.birthday = birthday
                         tmp_user.gender = gender
                         tmp_user.job = tmp_job
-                        tmp_user.created_at = created_at
-                        tmp_user.updated_at = updated_at
+                        tmp_user.created_day = created_day
+                        tmp_user.updated_day = updated_day
                         
                         tmp_user.save()
                     else:
