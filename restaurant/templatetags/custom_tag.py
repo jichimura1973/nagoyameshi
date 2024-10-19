@@ -40,3 +40,12 @@ def greet(val):
         greeting = 'こんばんは'
     
     return f'{greeting}'
+
+# @register.filter
+# def unit(val):
+#     # return str(val) + '円'
+#     return f'{val:,}円'
+
+@register.filter
+def date(val):
+    return f'{val.strftime("%Y年%m月")}'

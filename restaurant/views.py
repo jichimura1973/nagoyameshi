@@ -599,3 +599,54 @@ def review_delete(request):
         is_success = False
     
     return JsonResponse({'is_success': is_success})
+
+class RestaurantUpdateView(generic.UpdateView):
+    model = models.Restaurant
+    template_name = 'admin/restaurant_update.html'
+    form_class = forms.RestaurantUpdateForm
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('restaurant_detail', kwargs={'pk': pk})
+    def form_valid(self, form):
+        return super().form_valid(form)
+    def form_invalid(self, form):
+        context = self.get_context_data()
+        print(context)
+        return super().form_invalid(form)
+    
+
+
+class RestaurantCreateView(generic.CreateView):
+    template_name = "admin/restaurant_create.html"
+    model = models.Restaurant
+    form_class = forms.RestaurantCreateForm
+    success_url = None
+
+    def get(self, request, **kwargs):
+        user = request.user
+
+        if user.is_staff and user.is_authenticated:
+            return super().get(request, **kwargs)
+        else:
+            return reverse_lazy('top_page')
+    
+    def get_success_url(self):
+        return reverse_lazy('top_page')
+       
+    def form_valid(self, form):
+        # user_instance = self.request.user
+        # restaurant_instance = models.Restaurant(id=self.kwargs['pk'])
+        # review = form.save(commit=False)
+        # review.restaurant = restaurant_instance
+        # review.user = user_instance
+        # review.save()
+        # self.success_url = reverse_lazy('review_list', kwargs={'pk':
+        # self.kwargs['pk']})
+        
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        
+        return super().form_invalid(form)
+        

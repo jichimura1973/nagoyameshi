@@ -55,3 +55,16 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.user_name_kanji
 
+class MonthlySales(models.Model):
+    # e_mail = models.EmailField("E-Mail",unique=True)
+    date = models.DateTimeField("年月日", null=True, blank=True)
+    sales = models.IntegerField("売上" , blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['date'], name='unique_date')
+        ]
+    
+    def __str__(self):
+        return self.date
+     

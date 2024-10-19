@@ -28,6 +28,7 @@ if os.path.exists('./.is_debug'):
     DEBUG = True
 else:
     DEBUG = False
+print(DEBUG)
     
 ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com', '*']
 # ALLOWED_HOSTS = ['127.0.0.1']
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "storages",
 ]
 
 if DEBUG:
@@ -63,11 +65,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
-
-
 
 if DEBUG:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
@@ -77,8 +76,6 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
     }
-
-
 
 ROOT_URLCONF = "nagoyameshi.urls"
 
@@ -146,22 +143,40 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+# STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATICFILES_DIRS = (
-os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "media"),
 )
 
 # メディアファイルの設定
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# MEDIA_URL = "media/"
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # DJANGO_SETTINGS_MODULE = "allauth.account.forms"
+
+# staticファイルの参照先
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# mediaファイル保存先
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# アクセスキーID
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+# シークレットアクセスキー
+AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+# バケット名
+AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
+# 保存先URL
+STATIC_URL = 'https://%s.s3.ap-northeast-1.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+AWS_LOCATION = 'static'
+
 
 # allauth
 AUTH_USER_MODEL = "accounts.CustomUser"
@@ -175,10 +190,12 @@ AUTHENTICATION_BACKENDS = (
 
 # メールアドレス認証に変更する設定
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 
 # サインアップにメールアドレス確認を行わない設定
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
 
 # ログイン/ログアウト後の遷移先を設定
@@ -197,5 +214,12 @@ ACCOUNT_FORMS = {
 'signup': 'accounts.forms.MySignupForm',
 }
 
-if DEBUG == False:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# if DEBUG == False:
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# メールサーバーの設定
+EMAIL_HOST = os.environ["EMAIL_HOST"]
+EMAIL_PORT = os.environ["EMAIL_PORT"]
+EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_USE_TLS = True

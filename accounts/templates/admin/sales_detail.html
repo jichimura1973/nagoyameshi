@@ -1,0 +1,24 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+    <h1 class="mb-3 text-center">売り上げ管理</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">日付</th>
+                <th scope="col">売り上げ[円]</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for date, sales in monthly_sales_list %}
+                <tr>
+                    <td>{{ date}}</td>
+                    <td>{{ sales }} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}  

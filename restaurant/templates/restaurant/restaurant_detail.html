@@ -37,6 +37,11 @@
                     <li class="nav-item">
                         <a class="nav-link link-dark" {# TODO:3#} href="{% url 'review_list' object.id %}">レビュー</a>
                     </li>
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link link-dark" {# TODO:jun#} href="{% url 'restaurant_update' object.id %}"">更新</a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <div class="mb-2">
                     {% if object.photo %}

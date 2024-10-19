@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 
                 job_name = row[5]
                 
-                if row[6]==1:
+                if int(row[6])==1:
                     is_subscribed = True
                 else:
                     is_subscribed = False
@@ -52,6 +52,7 @@ class Command(BaseCommand):
                 print(f'gender:{gender}')
                 print(f'job_name:{job_name}')
                 print(f'email:{email}')
+                print(f'is_subscribed:{is_subscribed}')
                 print(f'created_at:{created_day}')
                 print(f'updated_at:{updated_day}')
                 
@@ -65,6 +66,7 @@ class Command(BaseCommand):
                         tmp_user.birthday = birthday
                         tmp_user.gender = gender
                         tmp_user.job = tmp_job
+                        tmp_user.is_subscribed = is_subscribed
                         tmp_user.created_day = created_day
                         tmp_user.updated_day = updated_day
                         

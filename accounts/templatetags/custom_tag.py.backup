@@ -1,0 +1,13 @@
+from django import template
+import datetime
+
+register = template.Library()
+
+@register.filter
+def unit(val):
+    # return str(val) + '円'
+    return f'{val:,}円'
+
+@register.filter
+def date(val):
+    return f'{val.strftime("%Y-%m-%d")}'

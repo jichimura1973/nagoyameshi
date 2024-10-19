@@ -1,0 +1,91 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+    <div class="container nagoyameshi-container pb-5">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6 col-md-8">
+                <nav class="my-3" style="--bs-breadcrumb-divider: '>';"aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'top_page'%}">ホーム</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            有料プラン登録
+                        </li>
+                    </ol>
+                </nav>
+                <h1 class="mb-3 text-center">有料プラン登録</h1>
+                <div class="card mb-4">
+                    <div class="card-header text-center">
+                        有料プランの内容
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">・当日の2時間前までならいつでも予約可能</li>
+                        <li class="list-group-item">・店舗をお好きなだけお気に入りに追加可能</li>
+                        <li class="list-group-item">・レビューを全件閲覧可能</li>
+                        <li class="list-group-item">・レビューを投稿可能</li>
+                        <li class="list-group-item">・月額たったの300円</li>
+                    </ul>
+                </div>
+                {% comment %} <hr class="mb-4">
+                <div class="alert alert-danger card-error" id="card-error"role="alert">
+                    <ul class="mb-0" id="error-list"></ul>
+                </div> {% endcomment %}
+                <form id="card-form" method="post"enctype='multipart/form-data'>
+                    {% csrf_token %}
+                    {% comment %} <input class="card-holder-name mb-3" id="card-holder-name"name="card_name" type="text" placeholder="カード名義人" required>
+                    <input class="card-holder-name mb-3" id="card-holder-number" name="card_number" type="text" placeholder="カード番号" required>
+                    {% if error_message %}
+                        <p class="text-danger">{{ error_message }}</p>
+                    {% endif %} {% endcomment %}
+                    <div class="d-flex justify-content-center">
+                        {% comment %} <button type="button" class="btn btn-primary text-white shadow-smw-50" id="checkout-button">Checkout</button> {% endcomment %}
+                        <button type="button" class="btn btn-primary text-white shadow-smw-50" id="checkout-button">
+                        {% comment %} <button class="btn btn-primary text-white shadow-smw-50" id="card-button"> {% endcomment %}
+                            登録
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script type="text/javascript">
+    // Create an instance of the Stripe object with your publishable API key
+    var stripe = Stripe("pk_test_51QDyOUGrZpvyk0KLjjmzcC2X9Ghx38A91HOvhXaT6IglbDM284Iyrt40nGHjLb1OSMRh45vJEoF5LmaGsWk40QwM00hgysbbxX");
+    var checkoutButton = document.getElementById("checkout-button");
+
+    checkoutButton.addEventListener("click", function () {
+        fetch("/accounts/create-checkout-session/", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (session) {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        })
+        .then(function (result) {
+            // If redirectToCheckout fails due to a browser or network
+            // error, you should display the localized error message to your
+            // customer using error.message.
+            if (result.error) {
+            alert(result.error.message);
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    });
+    </script>
+</main>
+{% endblock %}

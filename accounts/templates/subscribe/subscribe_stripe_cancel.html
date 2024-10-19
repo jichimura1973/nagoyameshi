@@ -1,0 +1,17 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+    <div class="container pt-4 pb-5 nagoyameshi-container">
+        <div class="row justify-content-center">
+            <div class="col-xl-7 col-lg-6 col-md-9">
+                <h2 class="mb-4 text-center">
+                    <p>ご加入がキャンセルされました</p>
+                </h2>
+                <a href="{% url 'top_page' %}">トップページにもどる</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
