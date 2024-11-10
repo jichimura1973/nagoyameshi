@@ -1,0 +1,25 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+
+    <main>
+        <div class="container pt-4 pb-5 nagoyameshi-container">
+            <div class="row justify-content-center">
+                <div class="col-xl-7 col-lg-6 col-md-9">
+                    <h2 class="mb-4 text-center">
+                        <p>確認メールを送信しました。</p>
+                        <p>メールアドレスを確認してください。</p>
+                    </h2>
+                    <p>確認のメールを送信しました。メールに記載されたリンクをクリックして、ユーザー登録を完了させてください。数分待っても確認のメールが届かない場合はご連絡ください。</p>
+                    <div class="mb-4 text-center">
+                        <a class="btn btn-primary btn-block" href="{% url 'account_login' %}">ログイン画面へ</a>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+    </main>
+</main>
+{% endblock %}

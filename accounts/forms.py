@@ -16,6 +16,7 @@ class MySignupForm(SignupForm):
     
     def __init__(self, *args, **kwargs):
         super(MySignupForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'taro.samarai@example.com'})
         self.fields['user_name_kanji'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '侍 太郎'})
         self.fields['user_name_kana'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'サムライ タロ'})
         # self.fields['zip_code'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '1010022'})

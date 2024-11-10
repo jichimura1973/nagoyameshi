@@ -9,7 +9,19 @@
                 <h1 class="mb-4 text-center">新規会員登録</h1>
                 <hr class="mb-4">
                 <form method="post" action="{% url 'account_signup' %}">
+                {% comment %} <form class="signup" id="signup_form" method="post" action="/accounts/signup/">     {% endcomment %}
                     {% csrf_token %}
+                    <div class="form-group row mb-3">
+                        <label for="username" class="col-md-5 col-form-labe ltext-md-left fw-bold">
+                            <div class="d-flex align-items-center">
+                                <span class="me-1">ユーザー名</span>
+                                <span class="badge bg-danger">必須</span>
+                            </div>
+                        </label>
+                        <div class="col-md-7">
+                            {{ form.username }}
+                        </div>
+                    </div>
                     <div class="form-group row mb-3">
                         <label for="user_name_kanji" class="col-md-5 col-form-labe ltext-md-left fw-bold">
                             <div class="d-flex align-items-center">
@@ -99,6 +111,16 @@
                         </label>
                         <div class="col-md-7">
                             {{ form.email }}
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label for="user_name_kanji" class="col-md-5 col-form-labe ltext-md-left fw-bold">
+                            <div class="d-flex align-items-center">
+                                <span class="me-1">有料会員</span>
+                            </div>
+                        </label>
+                        <div class="col-md-7">
+                            {{ form.is_subscribed }}
                         </div>
                     </div>
                     <div class="form-group row mb-3">

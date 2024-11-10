@@ -244,3 +244,11 @@ def create_checkout_session(request):
        return JsonResponse({'id': checkout_session.id})
    except Exception as e:
        return JsonResponse({'error':str(e)})
+   
+# class VerificationSentView(View):
+#     """確認メールを送信しました。ページ"""
+#     template_name = 'admin/verification_sent.html'
+
+#     def get(self, request):
+#         context = {}
+#         return render(self.request, self.template, context)
