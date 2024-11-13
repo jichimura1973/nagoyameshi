@@ -1,23 +1,38 @@
 {% extends "layout/base.html" %}
 {% load static %}
-{% load custom_tag %}
 {% block title %}NAGOYAMESHI{% endblock %}
 {% block content %}
 <main>
-    <h1 class="mb-3 text-center">売り上げ管理</h1>
+    <h1 class="mb-3 text-center">カテゴリ一覧</h1>
+    <div class="container nagoyameshi-container">
+        <h3 class="mb-3">キーワードから探す</h3>
+        {#TODO:1#}
+        {% comment %} <form method="GET" action="#" class="user-search-box"> {% endcomment %}
+        <form method="GET" action="{% url 'category_list' %}"class="user-search-box">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="カテゴリ名称" name="keyword">
+                <input type="hidden" name="button_type" value="keyword">
+                <button type="submit" class="btn btn-primary text-whiteshadow-sm">検索</button>
+            </div>
+        </form>
+    </div>
     <div class="container nagoyameshi-container">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">日付</th>
-                    <th scope="col">売り上げ[円]</th>
+                    <th scope="col">カテゴリ名称</th>
+                    <th scope="col">写真</th>
                 </tr>
             </thead>
             <tbody>
-                {% for monthly_sales in object_list %}
+                {% for category in object_list %}
                     <tr>
-                        <td>{{ monthly_sales.date|date}}</td>
-                        <td>{{ monthly_sales.sales|unit }} </td>
+                        <td>
+                            <a href="{% url 'category_detail' category.id %}">
+                            {{ category.name }}
+                            </a>
+                        </td>
+                        <td>{{ category.photo }} </td>
                     </tr>
                 {% endfor %}
             </tbody>

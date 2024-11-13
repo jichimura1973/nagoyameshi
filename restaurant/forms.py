@@ -73,7 +73,8 @@ class RestaurantUpdateForm(forms.ModelForm):
                   'price_min', 
                   'close_day_of_week',
                   'seats_number',
-                  'category'
+                  'category',
+                  'photo'
         )
     
     def __init__(self, *args, **kwargs):
@@ -88,7 +89,7 @@ class RestaurantUpdateForm(forms.ModelForm):
         self.fields['seats_number'].widget = forms.NumberInput(attrs={'class': 'form-control'})
         self.fields['close_day_of_week'].widget = forms.TextInput(attrs={'class': 'form-control','placeholder': '日曜日'})
         forms.ModelChoiceField(label="カテゴリ", queryset=Category.objects.all())
-
+        photo = forms.ImageField(label='店舗画像', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
 
 class RestaurantCreateForm(forms.ModelForm):
     class Meta:
@@ -117,3 +118,13 @@ class RestaurantCreateForm(forms.ModelForm):
         self.fields['seats_number'].widget = forms.NumberInput(attrs={'class': 'form-control'})
         self.fields['close_day_of_week'].widget = forms.TextInput(attrs={'class': 'form-control','placeholder': '日曜日'})
         forms.ModelChoiceField(label="カテゴリ", queryset=Category.objects.all())
+
+class CategoryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('name', 'photo',)
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'ひつまぶし'})
+        photo = forms.ImageField(label='店舗画像', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))

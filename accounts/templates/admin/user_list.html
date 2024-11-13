@@ -4,32 +4,46 @@
 {% block content %}
 <main>
     <h1 class="mb-3 text-center">ユーザー一覧</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">氏名</th>
-                <th scope="col">生年月日</th>
-                <th scope="col">有料会員</th>
-                <th scope="col">職業</th>
-                <th scope="col">登録日</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in object_list %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'user_update' user.id %}"> 
-                                {{ user.user_name_kanji}}
-                            </a> 
-                        </td>
-                        <td>{{ user.birthday }} </td>
-                        <td>{{ user.is_subscribed }}</td>
-                        <td>{{ user.job.name}}</td>
-                        <td>{{ user.created_day}}</td>
-                    </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container nagoyameshi-container">
+        <h3 class="mb-3">キーワードから探す</h3>
+        {#TODO:1#}
+        {% comment %} <form method="GET" action="#" class="user-search-box"> {% endcomment %}
+        <form method="GET" action="{% url 'user_list' %}"class="user-search-box">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="氏名・メールアドレス" name="keyword">
+                <input type="hidden" name="button_type" value="keyword">
+                <button type="submit" class="btn btn-primary text-whiteshadow-sm">検索</button>
+            </div>
+        </form>
+    </div>
+    <div class="container nagoyameshi-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">氏名</th>
+                    <th scope="col">生年月日</th>
+                    <th scope="col">有料会員</th>
+                    <th scope="col">職業</th>
+                    <th scope="col">登録日</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in object_list %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'user_update' user.id %}"> 
+                                    {{ user.user_name_kanji}}
+                                </a> 
+                            </td>
+                            <td>{{ user.birthday }} </td>
+                            <td>{{ user.is_subscribed }}</td>
+                            <td>{{ user.job.name}}</td>
+                            <td>{{ user.created_day}}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <!-- ページネーション処理 -->
     {% if is_paginated %}
         <div class="d-flex justify-content-center">

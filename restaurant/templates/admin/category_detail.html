@@ -1,0 +1,38 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+    <h1 class="mb-3 text-center">カテゴリ詳細</h1>
+               
+    <div class="container nagoyameshi-container pb-5">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6 col-md-10">
+                <div class="d-flex justify-content-end align-items-end mb-3">
+                    <div>
+                        <a href="{% url 'category_update' object.id %}">編集</a>
+                    </div>
+                </div>
+                <div class="container mb-4">
+                    <div class="row pb-2 mb-2 border-bottom">
+                        <div class="col-3">
+                            <span class="fw-bold">カテゴリ名称</span>
+                        </div>
+                        <div class="col">
+                            <span>{{ object.name }}</span>
+                        </div>
+                    </div>
+                    <div class="row pb-2 mb-2 border-bottom">
+                        <div class="col-3">
+                            <span class="fw-bold">画像</span>
+                        </div>
+                        <div class="col">
+                            <span>{{ object.photo }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

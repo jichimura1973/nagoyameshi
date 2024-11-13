@@ -650,3 +650,48 @@ class RestaurantCreateView(generic.CreateView):
         
         return super().form_invalid(form)
         
+
+class CategoryListView(generic.ListView):
+    """ カテゴリ一覧表示画面 ================================== """
+    model = models.Category
+    template_name = 'admin/category_list.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        
+        keyword = self.request.GET.get('keyword')
+        button_type = self.request.GET.get('button_type')
+        print(f'button_type {button_type}')
+        keyword = keyword if keyword is not None else ''
+        if button_type == 'keyword':
+            self.request.session['keyword_session'] = keyword
+        
+        keyword_session = self.request.session.get('keyword_session')
+        if keyword_session is not None :
+            queryset = models.Category.objects.filter(Q(name__icontains=keyword_session)).order_by('id')
+        else:
+            queryset = models.Category.objects.all().order_by('id')
+                
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryListView, self).get_context_data(**kwargs)
+        
+        return context
+
+class CategoryDetailView(generic.DetailView):
+    model = models.Category
+    template_name = 'admin/category_detail.html'  
+
+class CategoryUpdateView(generic.UpdateView):
+    model = models.Category
+    template_name = 'admin/category_update.html'
+    form_class = forms.CategoryUpdateForm
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('category_detail', kwargs={'pk': pk})
+    def form_valid(self, form):
+        return super().form_valid(form)
+    def form_invalid(self, form):
+        return super().form_invalid(form)

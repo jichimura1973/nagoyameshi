@@ -6,6 +6,7 @@ import stripe
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 # Create your views here.
@@ -101,14 +102,27 @@ class UserListView(generic.ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset =models.CustomUser.objects.all().order_by('id')
+        
+        keyword = self.request.GET.get('keyword')
+        button_type = self.request.GET.get('button_type')
+        print(f'button_type {button_type}')
+        keyword = keyword if keyword is not None else ''
+        if button_type == 'keyword':
+            self.request.session['keyword_session'] = keyword
+        
+        keyword_session = self.request.session.get('keyword_session')
+        if keyword_session is not None:
+            queryset = models.CustomUser.objects.filter(Q(user_name_kanji__icontains=keyword_session) | Q(user_name_kana__icontains=keyword_session) | Q(username__contains=keyword_session)).order_by('id')
+        else:
+            queryset = models.CustomUser.objects.all().order_by('id')
+                
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
         
         return context
-    
+
 class PasswordReset(PasswordResetView):
     """パスワード変更用URLの送付ページ"""
     domain = "127.0.0.1:8000"
@@ -207,7 +221,7 @@ class SubscribeStripeRegisterView(View):
 #    template_name = "payment/checkout.html"
 
 class SubscribeStripeSuccessView(generic.TemplateView):
-   template_name = "subscribe/subscribe_stripe_success.html"
+    template_name = "subscribe/subscribe_stripe_success.html"
 #    ここに書く
 
 
