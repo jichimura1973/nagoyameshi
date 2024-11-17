@@ -54,9 +54,9 @@
                                         <a class="dropdown-item" {#TODO:5#} href="{% url 'subscribe_cancel' %}">有料プラン解約</a>
                                         {# href="{%url 'subscribe_cancel' %}">有料プラン解約</a>#}
                                     {% else %}
-                                        <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_register' %}">有料プラン登録</a>
+                                        <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_stripe_register' %}">有料プラン登録</a>
                                     {% endif %} 
-                                    <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_stripe_register' %}">Stripe登録</a>
+                                    {% comment %} <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_stripe_register' %}">Stripe登録</a> {% endcomment %}
                                        
                                     <a class="dropdown-item" {#TODO:5#} href="{% url 'user_list' %}">アカウント管理</a>
                                     <a class="dropdown-item" {#TODO:5#} href="{% url 'category_list' %}">カテゴリ管理</a>
@@ -101,7 +101,7 @@
                                         <a class="dropdown-item" {#TODO:6#} href="{% url 'user_detail' user.id %}">会員情報</a>
                                         {% comment %} <a class="dropdown-item"{#TODO:6#}href="#">会員情報</a> {% endcomment %}
                                         {#href="{% url 'user_detail' user.id %}">会員情報</a>#}
-                                        <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_register' %}">有料プラン登録</a>
+                                        <a class="dropdown-item" {#TODO:7#} href="{% url 'subscribe_stripe_register' %}">有料プラン登録</a>
                                         {% comment %} <a class="dropdown-item"{#TODO:7#}href="#">有料プラン登録</a> {% endcomment %}
                                             {#href="{% url 'subscribe_register' %}">有料プラン登録</a>#}
                                         <div class="dropdown-divider"></div>

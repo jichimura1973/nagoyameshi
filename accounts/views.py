@@ -15,6 +15,7 @@ from django.views import generic, View
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from . import forms
 from . import models
+from . import mixins
 
 # Create your views here.
 class UserDetailView(generic.DetailView):
@@ -95,7 +96,7 @@ class SubscribePaymentView(View):
         return redirect(reverse_lazy('top_page'))
 
 
-class UserListView(generic.ListView):
+class UserListView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ ユーザー一覧表示画面 ================================== """
     model = models.CustomUser
     template_name = 'admin/user_list.html'
@@ -220,10 +221,16 @@ class SubscribeStripeRegisterView(View):
 # class PaymentCheckoutView(generic.TemplateView):
 #    template_name = "payment/checkout.html"
 
-class SubscribeStripeSuccessView(generic.TemplateView):
+class SubscribeStripeSuccessView(generic.View):
     template_name = "subscribe/subscribe_stripe_success.html"
 #    ここに書く
-
+    def get(self, request):
+        # Stripe支払いが成功した時に有料会員フラグをTrueにする。
+        user = request.user
+        
+        user.is_subscribed = True
+        user.save()
+        return render(request, "subscribe/subscribe_stripe_success.html", None)
 
 class SubscribeStripeCancelView(generic.TemplateView):
    template_name = "subscribe/subscribe_stripe_cancel.html"
