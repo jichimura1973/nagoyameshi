@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy, reverse
 from django.views import generic, View
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from allauth.account.views import EmailVerificationSentView
 from . import forms
 from . import models
 from . import mixins
@@ -34,6 +35,9 @@ class UserUpdateView(generic.UpdateView):
         return super().form_valid(form)
     def form_invalid(self, form):
         return super().form_invalid(form)
+
+class UserEmailVerificationSentView(EmailVerificationSentView):
+    template_name = 'admin/verification_sent.html'
     
 class SubscribeRegisterView(View):
     template = 'subscribe/subscribe_register.html'
@@ -239,32 +243,48 @@ def create_checkout_session(request):
     pass
 
 def create_checkout_session(request):
-   stripe.api_key = os.environ["STRIPE_API_SECRET_KEY"]   
-   try:
-       checkout_session = stripe.checkout.Session.create(
-           payment_method_types=['card'],
-           line_items=[
-               {
-                   'price_data': {
-                       'currency': 'jpy',
-                       'unit_amount': 300,
-                       'product_data': {
-                           'name': 'NAGOYAMESHI 有料会員月額利用料',
-                        #    'images': ['https://nagoyameshi-ichimura2.s3.amazonaws.com/static/images/logo/logo.png'],
-                        #    'images': ['http://127.0.0.1:8000/images/logo/logo.png'],
-                       },
-                   },
-                   'quantity': 1,
-               },
-           ],
-           mode='payment',
-           success_url=request.build_absolute_uri(reverse('subscribe_stripe_success')),
-           cancel_url=request.build_absolute_uri(reverse('subscribe_stripe_cancel')),
-        )
+    stripe.api_key = os.environ["STRIPE_API_SECRET_KEY"]  
+    print(request.user.id)
+            
+    try:
+        # checkout_session = stripe.checkout.Session.create(
+        #     client_reference_id=request.user.id if request.user.is_authenticated else None,
+        #     payment_method_types=['card'],
+        #     mode='subscription',
+        #     line_items=[
+        #         {
+        #             'price': 300,
+        #             'quantity': 1,
+        #         }
+        #     ],
+        #     success_url=request.build_absolute_uri(reverse('subscribe_stripe_success')),
+        #     cancel_url=request.build_absolute_uri(reverse('subscribe_stripe_cancel')),
+        
+        #     )
+         
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'jpy',
+                        'unit_amount': 300,
+                        'product_data': {
+                            'name': 'NAGOYAMESHI 有料会員月額利用料',
+                            #    'images': ['https://nagoyameshi-ichimura2.s3.amazonaws.com/static/images/logo/logo.png'],
+                            #    'images': ['http://127.0.0.1:8000/images/logo/logo.png'],
+                        },
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=request.build_absolute_uri(reverse('subscribe_stripe_success')),
+            cancel_url=request.build_absolute_uri(reverse('subscribe_stripe_cancel')),
+            )
 
-       return JsonResponse({'id': checkout_session.id})
-   except Exception as e:
-       return JsonResponse({'error':str(e)})
+        return JsonResponse({'id': checkout_session.id})
+    except Exception as e:
+        return JsonResponse({'error':str(e)})
    
 # class VerificationSentView(View):
 #     """確認メールを送信しました。ページ"""

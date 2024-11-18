@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.utils import timezone
 # Create your models here.
 
 
@@ -38,6 +38,10 @@ class CustomUser(AbstractUser):
     card_name = models.CharField(max_length=128, null=True, blank=True, verbose_name="カード名義")
     card_number = models.CharField(max_length=128, null=True, blank=True, verbose_name="カード番号")
     
+    stripeCustomerId = models.CharField(max_length=255,null=True, blank=True)
+    stripeSubscriptionId = models.CharField(max_length=255,null=True, blank=True)
+    regist_date = models.DateTimeField(default=timezone.now)
+
     created_day = models.DateTimeField("登録日", default=datetime.datetime.now, null=True, blank=True)
     updated_day = models.DateTimeField("更新日", default=datetime.datetime.now, null=True, blank=True)    
     deleted_day = models.DateTimeField("削除日", null=True, blank=True)

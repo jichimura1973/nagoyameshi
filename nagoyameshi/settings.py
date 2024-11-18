@@ -143,7 +143,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -163,19 +162,21 @@ STATICFILES_DIRS = (
 # DJANGO_SETTINGS_MODULE = "allauth.account.forms"
 
 # staticファイルの参照先
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# mediaファイル保存先
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# # mediaファイル保存先
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# アクセスキーID
-AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-# シークレットアクセスキー
-AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
-# バケット名
-AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
+# # アクセスキーID
+# AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+# # シークレットアクセスキー
+# AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+# # バケット名
+# AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
 # 保存先URL
-STATIC_URL = 'https://%s.s3.ap-northeast-1.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
-AWS_LOCATION = 'static'
+STATIC_URL = "static/"
+
+# STATIC_URL = 'https://%s.s3.ap-northeast-1.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+# AWS_LOCATION = 'static'
 
 
 # allauth

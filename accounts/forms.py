@@ -41,6 +41,7 @@ class MySignupForm(SignupForm):
         # user.job = self.cleaned_data['job']
         user.job = Job.objects.get(id=self.cleaned_data['job'])
         user.save()
+    
         return user
       
 class MyLoginForm(LoginForm):
