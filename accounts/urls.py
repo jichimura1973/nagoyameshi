@@ -18,5 +18,5 @@ urlpatterns = [
     path('password_reset_complete/', views.PasswordResetComplete.as_view(), name='password_reset_complete'), #追加
     # path('sales/', views.SalesListView.as_view(), name="sales_detail"),
     path('sales/', views.MonthlySalesListView.as_view(), name="sales_list"),
-    path('confirm-email/', views.UserEmailVerificationSentView.as_view(), name="account_email_verification_sent"),
+    path('confirm-email/', views.EmailVerificationSentView.as_view(), name="account_email_verification_sent"),
 ]

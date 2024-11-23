@@ -1,0 +1,18 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% user_display user as user_display %}
+
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+{{ site_name }} からのお知らせです！
+
+このメールは、ユーザー {{ user.email }} があなたのメールアドレスを使って {{ site_name }} でアカウントを登録したため送信されています。
+
+これが正しいことを確認するには、次のURLにアクセスしてください: {{ activate_url }}
+
+{{ site_name }} をご利用いただきありがとうございます！
+{{ site_domain }}
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock %}

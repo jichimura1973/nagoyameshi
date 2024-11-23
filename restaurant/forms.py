@@ -67,12 +67,12 @@ class RestaurantUpdateForm(forms.ModelForm):
         fields = ('name',
                   'description',
                   'postal_code', 
-                  'address', 
                   'tel_number', 
+                  'address', 
                   'price_max', 
                   'price_min', 
-                  'close_day_of_week',
                   'seats_number',
+                  'close_day_of_week',
                   'category',
                   'photo'
         )

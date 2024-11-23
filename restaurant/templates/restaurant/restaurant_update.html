@@ -8,10 +8,10 @@
             <div class="col-xl-5 col-lg-6 col-md-8">
                 <h1 class="mb-4 text-center">店舗情報修正</h1>
                 <hr class="mb-4">
-                {% comment %} <form method="post" action="{% url 'restaurant_update' %}">
+                {% comment %} <form method="post" action="{% url 'restaurant_update' %}"> 
                     {% csrf_token %} {% endcomment %}
                 <form method="POST" enctype='multipart/form-data'>
-                    {% csrf_token %}
+                    {% csrf_token %} 
                     <div class="form-group row mb-3">
                         <label for="name" class="col-md-5 col-form-labeltext-md-left fw-bold">
                             <div class="d-flex align-items-center">
@@ -117,7 +117,7 @@
                         </div>
                     </div> 
                     <hr class="my-4">
-                    <div class="form-group row mb-3">
+                    {% comment %} <div class="form-group row mb-3">
                         <label for="photo" class="col-md-5 col-form-label text-md-left fw-bold">
                             店舗写真
                         </label>
@@ -126,7 +126,7 @@
                         </div>
                     </div> 
                     <hr class="my-4">
-                    
+                     {% endcomment %}
                     
                     <div class="form-group d-flex justify-content-centermb-4">
                         <button type="submit" class="btn btn-primary text-white shadow-sm w-50">登録</button>
