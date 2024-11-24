@@ -7,10 +7,11 @@ from django.views import generic
 from django.db.models import Q
 from django.db.models import Avg, Count
 from django.http import JsonResponse
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from . import models
 from . import forms
-
+from accounts import mixins
 
 """ トップ画面 ====================================="""
 
@@ -269,7 +270,7 @@ class RestaurantDetailView(generic.DetailView):
             return redirect(reverse_lazy('account_login'))
 
         if not user.is_subscribed:
-            return redirect(reverse_lazy('subscribe_register'))
+            return redirect(reverse_lazy('subscribe_stripe_register'))
         
         pk = kwargs['pk']
         is_favorite = models.FavoriteRestaurant.objects.filter(user=user).filter(
@@ -347,7 +348,7 @@ class ReservationCreateView(generic.CreateView):
             return redirect(reverse_lazy('account_login'))
         
         if not user.is_subscribed:
-            return redirect(reverse_lazy('subscribe_register'))
+            return redirect(reverse_lazy('subscribe_stripe_register'))
 
     def form_valid(self, form):
         user_instance = self.request.user
@@ -417,7 +418,6 @@ class ReservationListView(generic.ListView):
 
     def get_queryset(self):
         queryset =models.Reservation.objects.filter(user_id=self.request.user.id).order_by('-reservation_date')
-        print('🤩🤩🤩🤩')
         for rest in queryset:
             print(f'restaurant:{rest.restaurant.name} reservation:{rest.reservation_date}')
             print(type(rest.reservation_date))
@@ -426,9 +426,6 @@ class ReservationListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(ReservationListView, self).get_context_data(**kwargs)
         context.update({'today': datetime.today().astimezone(),})
-        print('⭐️⭐️⭐️⭐️')
-        print(datetime.today().astimezone())
-        print(type(datetime.today().astimezone()))
         
         return context
     
@@ -465,7 +462,11 @@ class ReviewListView(generic.ListView):
         pk = self.kwargs['pk']
         context = super(ReviewListView, self).get_context_data(**kwargs)
         restaurant = models.Restaurant.objects.filter(id=pk).first()
-        is_posted = models.Review.objects.filter(user=self.request.user).filter(restaurant=restaurant).exists()
+        user = self.request.user
+        if user.is_authenticated:
+            is_posted = models.Review.objects.filter(user=self.request.user).filter(restaurant=restaurant).exists()
+        else:
+            is_posted = models.Review.objects.filter(restaurant=restaurant).exists()
         average_rate = models.Review.objects.filter(restaurant=restaurant).aggregate(Avg('rate'))
         average_rate = average_rate['rate__avg'] if average_rate['rate__avg'] is not None else 0
         average_rate = round(average_rate, 2)
@@ -501,7 +502,7 @@ class ReviewCreateView(generic.CreateView):
             return redirect(reverse_lazy('account_login'))
 
         if not user.is_subscribed:
-            return redirect(reverse_lazy('subscribe_register'))
+            return redirect(reverse_lazy('subscribe_stripe_register'))
 
     def form_valid(self, form):
         user_instance = self.request.user
@@ -600,7 +601,7 @@ def review_delete(request):
     
     return JsonResponse({'is_success': is_success})
 
-class RestaurantUpdateView(generic.UpdateView):
+class RestaurantUpdateView(mixins.OnlyStuffUserMixin, generic.UpdateView):
     model = models.Restaurant
     template_name = 'admin/restaurant_update.html'
     form_class = forms.RestaurantUpdateForm
@@ -617,7 +618,7 @@ class RestaurantUpdateView(generic.UpdateView):
     
 
 
-class RestaurantCreateView(generic.CreateView):
+class RestaurantCreateView(mixins.OnlyStuffUserMixin, generic.CreateView):
     template_name = "admin/restaurant_create.html"
     model = models.Restaurant
     form_class = forms.RestaurantCreateForm
@@ -651,7 +652,7 @@ class RestaurantCreateView(generic.CreateView):
         return super().form_invalid(form)
         
 
-class CategoryListView(generic.ListView):
+class CategoryListView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ カテゴリ一覧表示画面 ================================== """
     model = models.Category
     template_name = 'admin/category_list.html'
@@ -679,11 +680,11 @@ class CategoryListView(generic.ListView):
         
         return context
 
-class CategoryDetailView(generic.DetailView):
+class CategoryDetailView(mixins.OnlyStuffUserMixin, generic.DetailView):
     model = models.Category
     template_name = 'admin/category_detail.html'  
 
-class CategoryUpdateView(generic.UpdateView):
+class CategoryUpdateView(mixins.OnlyStuffUserMixin, generic.UpdateView):
     model = models.Category
     template_name = 'admin/category_update.html'
     form_class = forms.CategoryUpdateForm

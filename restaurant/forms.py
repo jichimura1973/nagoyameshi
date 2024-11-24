@@ -103,21 +103,23 @@ class RestaurantCreateForm(forms.ModelForm):
                   'price_min', 
                   'close_day_of_week',
                   'seats_number',
-                  'category'
+                  'category',
+                  'photo',
         )
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'NAGOYAMESHI店名'})
         self.fields['description'].widget = forms.Textarea(attrs={'class':'form-control', 'placeholder': '店舗の説明'})
-        self.fields['postal_code'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '123-4567'})
-        self.fields['tel_number'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '0123-45-6789'})
+        self.fields['postal_code'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '1234567、ハイフン無し'})
+        self.fields['tel_number'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '0123456789、ハイフン無し'})
         self.fields['address'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '東京都千代田区神田棟堀町300番地'})
         self.fields['price_max'].widget = forms.NumberInput(attrs={'class': 'form-control'})
         self.fields['price_min'].widget = forms.NumberInput(attrs={'class': 'form-control'})
         self.fields['seats_number'].widget = forms.NumberInput(attrs={'class': 'form-control'})
         self.fields['close_day_of_week'].widget = forms.TextInput(attrs={'class': 'form-control','placeholder': '日曜日'})
         forms.ModelChoiceField(label="カテゴリ", queryset=Category.objects.all())
+        photo = forms.ImageField(label='店舗画像', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
 
 class CategoryUpdateForm(forms.ModelForm):
     class Meta:

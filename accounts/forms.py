@@ -1,6 +1,7 @@
 from django import forms
 from allauth.account.forms import SignupForm, LoginForm
 from .models import CustomUser, Job
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 class MySignupForm(SignupForm):
     username = forms.CharField(max_length=255, label='ユーザー名')

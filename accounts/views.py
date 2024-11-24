@@ -14,6 +14,8 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic, View
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from allauth.account.views import EmailVerificationSentView
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 from . import forms
 from . import models
 from . import mixins
@@ -150,7 +152,7 @@ class PasswordResetComplete(PasswordResetCompleteView):
     template_name = 'admin/password_reset_complete.html'
     
 
-class SalesListView(generic.ListView):
+class SalesListView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ レストラン詳細画面 ================================== """
     template_name = "admin/sales_detail.html"
     model = models.CustomUser
@@ -195,7 +197,7 @@ class SalesListView(generic.ListView):
     
         return context
     
-class MonthlySalesListView(generic.ListView):
+class MonthlySalesListView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ 月次売上一覧表示画面 ================================== """
     model = models.MonthlySales
     template_name = 'admin/sales_list.html'
@@ -259,37 +261,9 @@ def create_checkout_session(request):
             ],
             success_url=request.build_absolute_uri(reverse('subscribe_stripe_success')),
             cancel_url=request.build_absolute_uri(reverse('subscribe_stripe_cancel')),
-        
             )
-         
-        # checkout_session = stripe.checkout.Session.create(
-        #     line_items=[
-        #         {
-        #             'price_data': {
-        #                 'currency': 'jpy',
-        #                 'unit_amount': 300,
-        #                 'product_data': {
-        #                     'name': 'NAGOYAMESHI 有料会員月額利用料',
-        #                     #    'images': ['https://nagoyameshi-ichimura2.s3.amazonaws.com/static/images/logo/logo.png'],
-        #                     #    'images': ['http://127.0.0.1:8000/images/logo/logo.png'],
-        #                 },
-        #             },
-        #             'quantity': 1,
-        #         },
-        #     ],
-        #     mode='payment',
-        #     success_url=request.build_absolute_uri(reverse('subscribe_stripe_success')),
-        #     cancel_url=request.build_absolute_uri(reverse('subscribe_stripe_cancel')),
-        #     )
-
         return JsonResponse({'id': checkout_session.id})
+    
     except Exception as e:
         return JsonResponse({'error':str(e)})
    
-# class VerificationSentView(View):
-#     """確認メールを送信しました。ページ"""
-#     template_name = 'admin/verification_sent.html'
-
-#     def get(self, request):
-#         context = {}
-#         return render(self.request, self.template, context)
