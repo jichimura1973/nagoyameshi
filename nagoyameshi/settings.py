@@ -28,8 +28,7 @@ if os.path.exists('./.is_debug'):
     DEBUG = True
 else:
     DEBUG = False
-print(DEBUG)
-    
+
 ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com', '*']
 # ALLOWED_HOSTS = ['127.0.0.1']
 

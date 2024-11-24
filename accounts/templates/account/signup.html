@@ -20,8 +20,19 @@
                         </label>
                         <div class="col-md-7">
                             {{ form.username }}
+                        </div> 
+                    </div> 
+                    <div class="form-group row mb-3">
+                        <label for="email" class="col-md-5 col-form-label text-md-left fw-bold">
+                            <div class="d-flex align-items-center">
+                                <span class="me-1">メールアドレス</span>
+                                <span class="badge bg-danger">必須</span>
+                            </div>
+                        </label>
+                        <div class="col-md-7">
+                            {{ form.email }}
                         </div>
-                    </div>
+                    </div> 
                     <div class="form-group row mb-3">
                         <label for="user_name_kanji" class="col-md-5 col-form-labe ltext-md-left fw-bold">
                             <div class="d-flex align-items-center">
@@ -102,18 +113,8 @@
                             {{ form.job }}
                         </div>
                     </div> 
-                    <div class="form-group row mb-3">
-                        <label for="email" class="col-md-5 col-form-label text-md-left fw-bold">
-                            <div class="d-flex align-items-center">
-                                <span class="me-1">メールアドレス</span>
-                                <span class="badge bg-danger">必須</span>
-                            </div>
-                        </label>
-                        <div class="col-md-7">
-                            {{ form.email }}
-                        </div>
-                    </div>
-                    <div class="form-group row mb-3">
+                    
+                    {% comment %} <div class="form-group row mb-3">
                         <label for="user_name_kanji" class="col-md-5 col-form-labe ltext-md-left fw-bold">
                             <div class="d-flex align-items-center">
                                 <span class="me-1">有料会員</span>
@@ -122,7 +123,7 @@
                         <div class="col-md-7">
                             {{ form.is_subscribed }}
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                     <div class="form-group row mb-3">
                         <label for="password" class="col-md-5 col-form-label text-md-left fw-bold">
                             <div class="d-flex align-items-center">

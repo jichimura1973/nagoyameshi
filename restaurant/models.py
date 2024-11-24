@@ -39,7 +39,7 @@ class Restaurant(models.Model):
     max_varidator = MaxValueValidator(1000)
     seats_number = models.IntegerField("席数", blank=True, null=True, validators=[min_varidator, max_varidator])
     close_day_of_week = models.CharField("定休日", max_length=50, blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, null=True)
     photo = models.ImageField(verbose_name='写真', blank=True, null=True)
     created_at = models.DateTimeField("登録日", auto_now_add=True)
     updated_at = models.DateTimeField("更新日", auto_now_add=True)    
@@ -55,8 +55,8 @@ class Restaurant(models.Model):
         return self.name
 
 class RestaurantCategory(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.DO_NOTHING)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, null=True)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, null=True)
     
     # class Meta:
     #     constraints = [

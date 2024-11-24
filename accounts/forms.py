@@ -3,6 +3,8 @@ from allauth.account.forms import SignupForm, LoginForm
 from .models import CustomUser, Job
 
 class MySignupForm(SignupForm):
+    username = forms.CharField(max_length=255, label='ユーザー名')
+    email = forms.CharField(max_length=255, label='メールアドレス')
     user_name_kanji = forms.CharField(max_length=255, label='氏名')
     user_name_kana = forms.CharField(max_length=255, label='フリガナ')
     # zip_code = forms.CharField(max_length=255, label='郵便番号')
@@ -17,6 +19,7 @@ class MySignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(MySignupForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'taro.samarai@example.com'})
+        self.fields['email'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'taro.samarai@example.com'})
         self.fields['user_name_kanji'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '侍 太郎'})
         self.fields['user_name_kana'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'サムライ タロ'})
         # self.fields['zip_code'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '1010022'})
@@ -26,11 +29,13 @@ class MySignupForm(SignupForm):
         self.fields['gender'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': '男性/女性'})
         # self.fields['job'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'エンジニア'})
         forms.ModelChoiceField(label="職業", queryset=Job.objects.all())
-        self.fields['email'].widget = forms.TextInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder':'taro.samurai@example.com'})
+        # self.fields['email'].widget = forms.TextInput(attrs={'type': 'email', 'class': 'form-control', 'placeholder':'taro.samurai@example.com'})
         self.fields['password1'].widget = forms.PasswordInput(attrs={'class':'form-control'})
         self.fields['password2'].widget = forms.PasswordInput(attrs={'class':'form-control'})
     
     def signup(self, request, user):
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
         user.user_name_kanji = self.cleaned_data['user_name_kanji']
         user.user_name_kana = self.cleaned_data['user_name_kana']
         # user.zip_code = self.cleaned_data['zip_code']
@@ -53,7 +58,7 @@ class MyLoginForm(LoginForm):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('user_name_kanji', 'user_name_kana', 'birthday', 'gender', 'job', 'email',)
+        fields = ('user_name_kanji', 'user_name_kana', 'birthday', 'gender', 'job', 'email')
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

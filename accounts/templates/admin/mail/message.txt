@@ -4,4 +4,6 @@
 
 再設定用URL
 {% comment %} {{ protocol}}://{{ domain }}{% url 'password_reset_confirm' uid token %} {% endcomment %}
-{{ protocol}}://{{ domain }}{% url 'password_reset_confirm' uid token %}
+{% comment %} {{ protocol}}://{{ domain }}{% url 'password_reset_confirm' uid token %} {% endcomment %}
+{{ protocol}}://127.0.0.1:8000{% url 'password_reset_confirm' uid token %}
+

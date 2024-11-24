@@ -25,6 +25,14 @@
                 <div class="container mb-4">
                     <div class="row pb-2 mb-2 border-bottom">
                         <div class="col-3">
+                            <span class="fw-bold">ユーザー名</span>
+                        </div>
+                        <div class="col">
+                            <span>{{ object.username }}</span>
+                        </div>
+                    </div>
+                    <div class="row pb-2 mb-2 border-bottom">
+                        <div class="col-3">
                             <span class="fw-bold">氏名</span>
                         </div>
                         <div class="col">
@@ -37,14 +45,6 @@
                         </div>
                         <div class="col">
                             <span>{{ object.user_name_kana }}</span>
-                        </div>
-                    </div>
-                    <div class="row pb-2 mb-2 border-bottom">
-                        <div class="col-3">
-                            <span class="fw-bold">メールアドレス</span>
-                        </div>
-                        <div class="col">
-                            <span>{{ object.email }}</span>
                         </div>
                     </div>
                     {% comment %} <div class="row pb-2 mb-2 border-bottom">

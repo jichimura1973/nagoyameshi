@@ -1,0 +1,31 @@
+{% extends "layout/base.html" %}
+{% load i18n %}
+{% load account %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+    <div class="container pt-4 pb-5 nagoyameshi-container">
+        <div class="row justify-content-center">
+            <div class="col-xl-7 col-lg-6 col-md-9">
+                <h2 class="mb-4 text-center">
+                    <p>メールアドレスを確認してください。</p>
+                </h2>
+                {% if confirmation %}
+                    {% user_display confirmation.email_address.user as user_display %}
+                    <p>{% blocktrans with confirmation.email_address.email as email %}ユーザー名：{{ user_display }}様のメールアドレス<a href="mailto:{{ email }}">{{ email }}</a> を確認してください。{% endblocktrans %}</p>
+                    <div class="mb-4 text-center">
+        
+                        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-block" >確認</button>
+                        </form>
+                    </div>
+                {% else %}
+                    {% url 'account_email' as email_url %}
+                    <p>{% blocktrans %}有効期限切れです。 <a href="{{ email_url }}">再度、新規ユーザー登録を実施してください。</a>.{% endblocktrans %}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
