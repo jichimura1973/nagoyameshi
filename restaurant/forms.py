@@ -130,3 +130,16 @@ class CategoryUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'ひつまぶし'})
         photo = forms.ImageField(label='店舗画像', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+
+
+class CategoryCreateForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('name',
+                  'photo',
+        )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget = forms.TextInput(attrs={'class':'form-control', 'placeholder': 'カテゴリ名称'})
+        photo = forms.ImageField(label='カテゴリ画像', widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))

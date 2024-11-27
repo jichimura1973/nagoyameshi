@@ -1,0 +1,85 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}NAGOYAMESHI{% endblock %}
+{% block content %}
+<main>
+    <h1 class="mb-3 text-center">店舗一覧</h1>
+    <div class="container nagoyameshi-container">
+        <h3 class="mb-3">キーワードから探す</h3>
+        {#TODO:1#}
+        {% comment %} <form method="GET" action="#" class="user-search-box"> {% endcomment %}
+        <form method="GET" action="{% url 'restaurant_list_admin' %}"class="user-search-box">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="店舗名・住所・カテゴリ名称" name="keyword">
+                <input type="hidden" name="button_type" value="keyword">
+                <button type="submit" class="btn btn-primary text-whiteshadow-sm">検索</button>
+            </div>
+        </form>
+    </div>
+    <div class="container nagoyameshi-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">店舗名</th>
+                    <th scope="col">住所</th>
+                    <th scope="col">席数</th>
+                    <th scope="col">定休日</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for restaurant in object_list %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'restaurant_update' restaurant.id %}"> 
+                                    {{ restaurant.name}}
+                                </a> 
+                            </td>
+                            <td>{{ restaurant.address }} </td>
+                            <td>{{ restaurant.seats_number }}</td>
+                            <td>{{ restaurant.close_day_of_week}}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- ページネーション処理 -->
+    {% if is_paginated %}
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination"> 
+                    <!-- 前ページへのリンク -->
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{page_obj.previous_page_number }}" rel="prev" aria-label="&laquo; 前">
+                                &lsaquo;
+                            </a>
+                        </li>
+                    {% endif %}
+                    <!-- ページ数表示 -->
+                    {% for page_num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == page_num %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">
+                                    {{page_num }}
+                                </span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <!-- 次ページへのリンク -->
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{page_obj.next_page_number }}" rel="next" aria-label="次 &raquo;">
+                                &rsaquo;
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}

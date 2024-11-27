@@ -617,7 +617,6 @@ class RestaurantUpdateView(mixins.OnlyStuffUserMixin, generic.UpdateView):
         return super().form_invalid(form)
     
 
-
 class RestaurantCreateView(mixins.OnlyStuffUserMixin, generic.CreateView):
     template_name = "admin/restaurant_create.html"
     model = models.Restaurant
@@ -696,3 +695,57 @@ class CategoryUpdateView(mixins.OnlyStuffUserMixin, generic.UpdateView):
         return super().form_valid(form)
     def form_invalid(self, form):
         return super().form_invalid(form)
+
+
+class CategoryCreateView(mixins.OnlyStuffUserMixin, generic.CreateView):
+    template_name = "admin/category_create.html"
+    model = models.Category
+    form_class = forms.CategoryCreateForm
+    success_url = None
+
+    def get(self, request, **kwargs):
+        user = request.user
+
+        if user.is_staff and user.is_authenticated:
+            return super().get(request, **kwargs)
+        else:
+            return reverse_lazy('top_page')
+    
+    def get_success_url(self):
+        return reverse_lazy('top_page')
+       
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        
+        return super().form_invalid(form)
+
+class RestaurantListAdminView(mixins.OnlyStuffUserMixin, generic.ListView):
+    """ ユーザー一覧表示画面 ================================== """
+    model = models.Restaurant
+    template_name = 'admin/restaurant_list.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        
+        keyword = self.request.GET.get('keyword')
+        button_type = self.request.GET.get('button_type')
+        print(f'button_type {button_type}')
+        keyword = keyword if keyword is not None else ''
+        if button_type == 'keyword':
+            self.request.session['keyword_session'] = keyword
+        
+        keyword_session = self.request.session.get('keyword_session')
+        if keyword_session is not None:
+            # queryset = models.Restaurant.objects.filter(Q(name__icontains=keyword_session) | Q(address__icontains=keyword_session) | Q(category_name__contains=keyword_session)).order_by('id')
+            queryset = models.Restaurant.objects.filter(Q(name__icontains=keyword_session) | Q(address__icontains=keyword_session)).order_by('id')
+        else:
+            queryset = models.Restaurant.objects.all().order_by('id')
+                
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(RestaurantListAdminView, self).get_context_data(**kwargs)
+        
+        return context
