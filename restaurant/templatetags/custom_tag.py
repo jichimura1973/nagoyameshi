@@ -49,3 +49,7 @@ def greet(val):
 @register.filter
 def date(val):
     return f'{val.strftime("%Y年%m月")}'
+
+@register.filter
+def date_yyyymmdd(val):
+    return f'{val.strftime("%Y年%-m月%-d日")}'

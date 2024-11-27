@@ -75,7 +75,7 @@
                             <div>
                                 {{ review.user.user_name_kanji}}{{ review.user.user_name_kanji|honor }}
                                 <div class="text-muted small mb-1">
-                                    （利用日：{{review.visited_at}}）
+                                    （利用日：{{review.visited_at|date_yyyymmdd}}）
                                 </div>
                             </div>
                             {% if review.user.user_name_kanji == user.user_name_kanji %}

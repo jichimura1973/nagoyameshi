@@ -158,7 +158,7 @@ class RestaurantListView(generic.ListView):
                 #     data['price_min'] = 0
                 # if data['price_max'] is None:
                 #     data['price_max'] = 10000
-                if data['price_min'] <= int(price_session) <= data['price_max']:
+                if data['price_max'] <= int(price_session):
                     target_id_list.append(data['id'])
             restaurant_list = restaurant_list.filter(id__in=target_id_list)
         # 表示順
