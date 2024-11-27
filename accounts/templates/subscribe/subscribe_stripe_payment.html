@@ -3,6 +3,7 @@
 {% block title %}NAGOYAMESHI{% endblock %}
 {% block content %}
 <main>
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <div class="container nagoyameshi-container pb-5">
         <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-6 col-md-8">
@@ -58,6 +59,7 @@
     // Create an instance of the Stripe object with your publishable API key
     var stripe = Stripe("pk_test_51QDyOUGrZpvyk0KLjjmzcC2X9Ghx38A91HOvhXaT6IglbDM284Iyrt40nGHjLb1OSMRh45vJEoF5LmaGsWk40QwM00hgysbbxX");
     var checkoutButton = document.getElementById("checkout-button");
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     checkoutButton.addEventListener("click", function () {
         fetch("/accounts/create-checkout-session/", {
@@ -65,7 +67,8 @@
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=UTF-8',
-            'X-CSRFToken': '{{ csrf_token }}'
+            //'X-CSRFToken': '{{ csrf_token }}',
+            'X-CSRFToken': csrfToken
         },
         })
         .then(function (response) {
