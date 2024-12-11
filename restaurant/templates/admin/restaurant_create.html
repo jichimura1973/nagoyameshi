@@ -16,6 +16,7 @@
                         <label for="name" class="col-md-5 col-form-labeltext-md-left fw-bold">
                             <div class="d-flex align-items-center">
                                 <span class="me-1">店舗名</span>
+                                <span class="badge bg-danger">必須</span>
                             </div>
                         </label>
                         <div class="col-md-7">
@@ -41,6 +42,7 @@
                         </label>
                         <div class="col-md-7">
                             {{ form.postal_code }}
+                            <span class="alertarea"></span>
                         </div>
                     </div>
                     <div class="form-group row mb-3">
@@ -62,8 +64,11 @@
                             </div>
                         </label>
                         <div class="col-md-7">
+
                             {{ form.tel_number }}
-                            </div>
+                            <span class="alertarea"></span>
+                       
+                        </div>
                     </div> 
                     <div class="form-group row mb-3">
                         <label for="price_max" class="col-md-5 col-form-label text-md-left fw-bold">
@@ -133,5 +138,66 @@
             </div>
         </div>
     </div>
+    
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+        
+          // -----------------------
+          // 7文字以上の入力チェック
+          // -----------------------
+          var targets = document.getElementsByClassName('number15');
+          for (var i=0 ; i<targets.length ; i++) {
+            // ▼文字が入力されたタイミングでチェックする：
+            targets[i].oninput = function () {
+              var alertelement = this.parentNode.getElementsByClassName('alertarea');
+              if( (this.value.trim().length < 10 ) || (this.value.trim().length > 15 ) || ( this.value.match( /[^\d]+/ ))  ) {
+                // ▼空白を除いた入力文字数が2文字よりも少なければ
+                if( alertelement[0] ) { alertelement[0].innerHTML = "数字10〜15桁で入力してください。"; }
+                this.style.border = "2px solid red";
+              }
+              else {
+                // ▼何も入力がないか、または指定文字しかないなら
+                if( alertelement[0] ) { alertelement[0].innerHTML = ""; }
+                this.style.border = "1px solid black";
+              }
+            }
+          }
+          // ----------
+          // ▲ここまで
+          // ----------
+        
+        });
+    </script>   
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+        
+          // -----------------------
+          // 7文字以上の入力チェック
+          // -----------------------
+          var targets = document.getElementsByClassName('number7');
+          for (var i=0 ; i<targets.length ; i++) {
+            // ▼文字が入力されたタイミングでチェックする：
+            targets[i].oninput = function () {
+              var alertelement = this.parentNode.getElementsByClassName('alertarea');
+              if( (this.value.trim().length !=7 ) || ( this.value.match( /[^\d]+/ ))  ) {
+                // ▼空白を除いた入力文字数が7文字以外、または数値以外の時
+                if( alertelement[0] ) { alertelement[0].innerHTML = "数字7桁で入力してください。"; }
+                this.style.border = "2px solid red";
+              }
+              else {
+                // ▼何も入力がないか、または指定文字しかないなら
+                if( alertelement[0] ) { alertelement[0].innerHTML = ""; }
+                this.style.border = "1px solid black";
+              }
+            }
+          }
+          // ----------
+          // ▲ここまで
+          // ----------
+        
+        });
+        </script>
+         
+   
 </main>
 {% endblock %}    

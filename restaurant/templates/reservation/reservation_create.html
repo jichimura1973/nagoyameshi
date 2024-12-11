@@ -55,6 +55,7 @@
                         </label>
                         <div class="col-md-7">
                             {{ form.reservation_date }}
+                            <span class="alertarea"></span>
                         </div>
                     </div>
                     {% comment %} <div class="form-group row mb-3">
@@ -135,16 +136,42 @@
             function (date) {
             return restaurantRegularHolidays.includes(date.getDay());
             }
-        ]
-        
-        
-
-        {% comment %} const selectDate = this.formatDate(selectedDates[0]);
-        if (selectedDates[0].getDay() === 0){
-            instance.set('minTime','13:00');
-            instance.set('maxTime','22:00');
-        } {% endcomment %}
-
+        ]       
     });
 </script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+    
+      // -----------------------
+      // 予約日時の入力チェック（３時間前までに予約が必要）
+      // -----------------------
+      var targets = document.getElementsByClassName('reserv_date');
+      for (var i=0 ; i<targets.length ; i++) {
+        // ▼文字が入力されたタイミングでチェックする：
+        targets[i].oninput = function () {
+          var alertelement = this.parentNode.getElementsByClassName('alertarea');
+          let date = new Date();
+          let reserv_date = new Date(this.value)
+          reserv_date.setHours(reserv_date.getHours() + 3)
+          console.log(date)
+          console.log(reserv_date)
+          //if( (this.value.trim().length !=7 ) || ( this.value.match( /[^\d]+/ ))  ) {
+          if (reserv_date < date) {
+          // ▼空白を除いた入力文字数が7文字以外、または数値以外の時
+            if( alertelement[0] ) { alertelement[0].innerHTML = "３時間前までに予約が必要です。"; }
+            this.style.border = "2px solid red";
+          }
+          else {
+            // ▼何も入力がないか、または指定文字しかないなら
+            if( alertelement[0] ) { alertelement[0].innerHTML = ""; }
+            this.style.border = "1px solid black";
+          }
+        }
+      }
+      // ----------
+      // ▲ここまで
+      // ----------
+    
+    });
+    </script>
 {% endblock %}

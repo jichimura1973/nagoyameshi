@@ -3,6 +3,28 @@
 {% block title %}NAGOYAMESHI{% endblock %}
 {% block content %}
 <main>
+    <!-- カテゴリ削除用モーダル -->
+    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCategoryModalLabel">
+                        カテゴリを削除してもよろしいですか？
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post" name="deleteCategoryForm">
+                        {% csrf_token %}
+                        <button id="category-delete-button" type="button" class="btn btn-danger text-white shadow-sm">
+                            削除
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <h1 class="mb-3 text-center">カテゴリ一覧</h1>
     <div class="container nagoyameshi-container">
         <h3 class="mb-3">キーワードから探す</h3>
@@ -22,6 +44,7 @@
                 <tr>
                     <th scope="col">カテゴリ名称</th>
                     <th scope="col">写真</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -33,12 +56,17 @@
                             </a>
                         </td>
                         <td>{{ category.photo }} </td>
+                        <td>
+                            <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-category-id="{{ category.id}}" data-category-name=" {{category.name }}">
+                            削除
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <!-- ページネーション処理 -->
+    {% comment %} <!-- ページネーション処理 -->
     {% if is_paginated %}
         <div class="d-flex justify-content-center">
             <nav>
@@ -76,6 +104,39 @@
                 </ul>
             </nav>
         </div>
-    {% endif %}
+    {% endif %} {% endcomment %}
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
+    </script>
+    <script>
+        const deleteCategoryForm = document.forms.deleteCategoryForm;
+        document.getElementById('deleteCategoryModal').addEventListener('show.bs.modal', (event) => {
+            let deleteButton = event.relatedTarget;
+            let categoryId = deleteButton.dataset.categoryId;
+            let categoryName = deleteButton.dataset.categoryName;
+            console.log('categoryId:', categoryId)
+            console.log('categoryName:', categoryName)
+            document.getElementById('category-delete-button').addEventListener('click', () => {
+                deleteCategory(categoryId)
+                });
+        });
+        function deleteCategory(id) {
+            $.ajax({
+                url: "/category-delete",
+                type: "GET",
+                data: {
+                pk: id
+                },
+                dataType: "json",
+                success: function (result) {
+                    $('#deleteCategoryModal').modal('hide');
+                    location.reload()
+                    },
+                error: function () {
+                alert('error')
+                }
+            });
+        }
+    </script>
 </main>
 {% endblock %}

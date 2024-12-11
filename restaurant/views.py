@@ -655,7 +655,7 @@ class CategoryListView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ カテゴリ一覧表示画面 ================================== """
     model = models.Category
     template_name = 'admin/category_list.html'
-    paginate_by = 20
+    # paginate_by = 20
 
     def get_queryset(self):
         
@@ -721,11 +721,26 @@ class CategoryCreateView(mixins.OnlyStuffUserMixin, generic.CreateView):
         
         return super().form_invalid(form)
 
+
+def category_delete(request):
+    """ カテゴリの削除 ================================== """
+    pk = request.GET.get('pk')
+    is_success = True
+    if pk:
+        try:
+            models.Category.objects.filter(id=pk).delete()
+        except:
+            is_success = False
+    else:
+        is_success = False
+    
+    return JsonResponse({'is_success': is_success})
+
 class RestaurantListAdminView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ ユーザー一覧表示画面 ================================== """
     model = models.Restaurant
     template_name = 'admin/restaurant_list.html'
-    paginate_by = 20
+    # paginate_by = 20
 
     def get_queryset(self):
         
@@ -749,3 +764,17 @@ class RestaurantListAdminView(mixins.OnlyStuffUserMixin, generic.ListView):
         context = super(RestaurantListAdminView, self).get_context_data(**kwargs)
         
         return context
+    
+def restaurant_delete(request):
+    """ 店舗の削除 ================================== """
+    pk = request.GET.get('pk')
+    is_success = True
+    if pk:
+        try:
+            models.Restaurant.objects.filter(id=pk).delete()
+        except:
+            is_success = False
+    else:
+        is_success = False
+    
+    return JsonResponse({'is_success': is_success})

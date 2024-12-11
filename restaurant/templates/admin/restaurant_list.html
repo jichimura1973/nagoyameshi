@@ -3,6 +3,27 @@
 {% block title %}NAGOYAMESHI{% endblock %}
 {% block content %}
 <main>
+    <!-- 店舗削除用モーダル -->
+    <div class="modal fade" id="deleteRestaurantModal" tabindex="-1" aria-labelledby="deleteRestaurantModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteRestaurantModalLabel">
+                        店舗を削除してもよろしいですか？
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
+                <div class="modal-footer">
+                    <form action="" method="post" name="deleteRestaurantForm">
+                        {% csrf_token %}
+                        <button id="restaurant-delete-button" type="button" class="btn btn-danger text-white shadow-sm">
+                            削除
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <h1 class="mb-3 text-center">店舗一覧</h1>
     <div class="container nagoyameshi-container">
         <h3 class="mb-3">キーワードから探す</h3>
@@ -24,6 +45,7 @@
                     <th scope="col">住所</th>
                     <th scope="col">席数</th>
                     <th scope="col">定休日</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -37,12 +59,17 @@
                             <td>{{ restaurant.address }} </td>
                             <td>{{ restaurant.seats_number }}</td>
                             <td>{{ restaurant.close_day_of_week}}</td>
+                            <td>
+                                <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#deleteRestaurantModal" data-restaurant-id="{{ restaurant.id}}" data-restaurant-name=" {{restaurant.name }}">
+                                削除
+                                </a>
+                            </td>
                         </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <!-- ページネーション処理 -->
+    {% comment %} <!-- ページネーション処理 -->
     {% if is_paginated %}
         <div class="d-flex justify-content-center">
             <nav>
@@ -80,6 +107,39 @@
                 </ul>
             </nav>
         </div>
-    {% endif %}
+    {% endif %} {% endcomment %}
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous">
+    </script>
+    <script>
+        const deleteRestaurantForm = document.forms.deleteRestaurantForm;
+        document.getElementById('deleteRestaurantModal').addEventListener('show.bs.modal', (event) => {
+            let deleteButton = event.relatedTarget;
+            let restaurantId = deleteButton.dataset.restaurantId;
+            let restaurantName = deleteButton.dataset.restaurantName;
+            console.log('restaurantId:', restaurantId)
+            console.log('restaurantName:', restaurantName)
+            document.getElementById('restaurant-delete-button').addEventListener('click', () => {
+                deleteRestaurant(restaurantId)
+                });
+        });
+        function deleteRestaurant(id) {
+            $.ajax({
+                url: "/restaurant-delete",
+                type: "GET",
+                data: {
+                pk: id
+                },
+                dataType: "json",
+                success: function (result) {
+                    $('#deleteRestaurantModal').modal('hide');
+                    location.reload()
+                    },
+                error: function () {
+                alert('error')
+                }
+            });
+        }
+    </script>
 </main>
 {% endblock %}

@@ -19,10 +19,12 @@ urlpatterns = [
     path("restaurant-update/<int:pk>/", views.RestaurantUpdateView.as_view(), name="restaurant_update"),
     path("restaurant-create/", views.RestaurantCreateView.as_view(), name="restaurant_create"),
     path("restaurant-list-admin/", views.RestaurantListAdminView.as_view(), name="restaurant_list_admin"),
+    path("restaurant-delete", views.restaurant_delete, name="restaurant_delete"),
     path("category-list/", views.CategoryListView.as_view(), name="category_list"),
     path("category-detail/<int:pk>/", views.CategoryDetailView.as_view(), name="category_detail"),
     path("category-update/<int:pk>/", views.CategoryUpdateView.as_view(), name="category_update"),
     path("category-create/", views.CategoryCreateView.as_view(), name="category_create"),
+    path('category-delete', views.category_delete, name='category_delete'),
     
     
 ]
