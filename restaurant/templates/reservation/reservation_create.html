@@ -47,7 +47,7 @@
                         </a>
                     </li>
                 </ul>
-                <form method="POST" enctype='multipart/form-data'>
+                <form class="checkform" method="POST" enctype='multipart/form-data'>
                     {% csrf_token %}
                     <div class="form-group row mb-3">
                         <label for="reservation_date" class="col-md-5 col-form-label text-md-left fw-bold">
@@ -152,10 +152,10 @@
           var alertelement = this.parentNode.getElementsByClassName('alertarea');
           let date = new Date();
           let reserv_date = new Date(this.value)
-          reserv_date.setHours(reserv_date.getHours() + 3)
+          // 予約時刻＋３時間と現在時刻を比較
+          reserv_date.setHours(reserv_date.getHours() - 3)
           console.log(date)
           console.log(reserv_date)
-          //if( (this.value.trim().length !=7 ) || ( this.value.match( /[^\d]+/ ))  ) {
           if (reserv_date < date) {
           // ▼空白を除いた入力文字数が7文字以外、または数値以外の時
             if( alertelement[0] ) { alertelement[0].innerHTML = "３時間前までに予約が必要です。"; }
@@ -173,5 +173,58 @@
       // ----------
     
     });
+    </script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+        
+          // ----------------------------------------------------------
+          // 送信時のチェック（※規則に沿わない入力があれば送信しない）
+          // ----------------------------------------------------------
+          var targets = document.getElementsByClassName('checkform');
+          for (var i=0 ; i<targets.length ; i++) {
+        
+            // ▼送信直前で全項目を再度チェックしてエラーを数える：
+            targets[i].onsubmit = function () {
+              var inputelements = this.querySelectorAll('input,textarea');  // フォームの中にあるinput要素とtextarea要素をすべて得る
+              var alerts = this.getElementsByClassName('alertarea');
+              var ret = 0;
+        
+              // ――――――――――――――――――
+              // ▽全項目のoninputイベントを一括実行
+              // ――――――――――――――――――
+              for (var j=0 ; j<alerts.length ; j++) {
+                if( inputelements[j].oninput ) {
+                  // oninputイベントが定義されている場合にだけ実行する
+                  inputelements[j].oninput();
+                }
+              }
+        
+              // ――――――――――――――――――
+              // ▽アラートの表示数をカウントする
+              // ――――――――――――――――――
+              for (var j=0 ; j<alerts.length ; j++) {
+                if( alerts[j].innerHTML.length > 0 ) {
+                  // アラートが表示されていればカウント
+                  ret++;
+                }
+              }
+              if( ret == 0 ) {
+                // エラーメッセージが1つもなければ送信を許可
+                return true;
+              }
+              else {
+                // エラーメッセージが1つ以上あれば、アラートを表示して送信をブロック。
+                alert( ret + "個のエラーがあります。");// ※警告用のダイアログボックスを表示したくないなら、この行は削除。
+                return false;
+              }
+        
+            }
+          }
+          // ----------
+          // ▲ここまで
+          // ----------
+        
+        });
     </script>
 {% endblock %}

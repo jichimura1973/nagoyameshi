@@ -207,3 +207,17 @@ a {
 .card-error {
     display: none;
 }
+
+.alertarea {
+    color: red;                             /* 文字色(赤色) */
+    /*background-color: #fee;*/                 /* 背景色(淡い赤色) */
+    /*background-image: url("alerticon.png");*/ /* 背景画像(警告アイコンを表示) */
+    /*background-repeat: no-repeat;*/           /* 背景画像の繰り返しをナシに */
+    /*background-position: 0.35em center;*/     /* 背景画像の掲載位置(左端から0.35em・上下方向の中央) */
+    /*display: inline-block;*/                  /* インラインブロック化 */
+    border-radius: 0.5em;                   /* 角丸(半径0.5文字分) */
+    margin-left: 0.5em;                     /* 外側左端の余白(0.5文字分) */
+    /*padding: 1px 0.5em 1px 32px;*/            /* 内側の余白(警告アイコンに重ならないよう左端に多めの余白を設ける) */
+ }
+ /* ▼入力チェック結果でエラーがない場合は非表示にする */
+ .alertarea:empty { display: none; }
