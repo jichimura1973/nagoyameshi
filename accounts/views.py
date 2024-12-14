@@ -37,9 +37,6 @@ class UserUpdateView(generic.UpdateView):
         return super().form_valid(form)
     def form_invalid(self, form):
         return super().form_invalid(form)
-
-# class UserEmailVerificationSentView(EmailVerificationSentView):
-#     template_name = 'admin/verification_sent.html'
     
 class SubscribeRegisterView(View):
     template = 'subscribe/subscribe_register.html'
@@ -112,7 +109,6 @@ class UserListView(mixins.OnlyStuffUserMixin, generic.ListView):
         
         keyword = self.request.GET.get('keyword')
         button_type = self.request.GET.get('button_type')
-        print(f'button_type {button_type}')
         keyword = keyword if keyword is not None else ''
         if button_type == 'keyword':
             self.request.session['keyword_session'] = keyword
@@ -156,12 +152,6 @@ class SalesListView(mixins.OnlyStuffUserMixin, generic.ListView):
     """ レストラン詳細画面 ================================== """
     template_name = "admin/sales_detail.html"
     model = models.CustomUser
-    # paginate_by = 12
-    
-    # def get_queryset(self):
-    #     query_set = self.get_context_data()
-        
-    #     return query_set
     
     def get_context_data(self, **kwargs):
         # サブスクの月額単価
@@ -212,11 +202,6 @@ class MonthlySalesListView(mixins.OnlyStuffUserMixin, generic.ListView):
         
         return context
 
-# payment/views.py
-
-# class PaymentIndexView(generic.TemplateView):
-#    template_name = "payment/index.html"
-
 class SubscribeStripeRegisterView(View):
     template = 'subscribe/subscribe_stripe_payment.html'
     
@@ -224,9 +209,6 @@ class SubscribeStripeRegisterView(View):
         context = {}
         return render(self.request, self.template, context)
     
-# class PaymentCheckoutView(generic.TemplateView):
-#    template_name = "payment/checkout.html"
-
 class SubscribeStripeSuccessView(generic.View):
     template_name = "subscribe/subscribe_stripe_success.html"
 #    ここに書く
@@ -246,7 +228,6 @@ def create_checkout_session(request):
 
 def create_checkout_session(request):
     stripe.api_key = os.environ["STRIPE_API_SECRET_KEY"]  
-    print(request.user.id)
             
     try:
         checkout_session = stripe.checkout.Session.create(

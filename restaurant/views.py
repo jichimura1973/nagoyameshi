@@ -59,13 +59,7 @@ class TopPageView(generic.ListView):
                 average_rate = round(average_rate * 2) / 2
         
             average_rate_star_list.append(average_rate)
-
-            # print('⭐️⭐️⭐️')
-            # print(restaurant.name)
-            # print(average_rate_list)
-            # print('🤩🤩🤩🤩🤩🤩🤩')
-            # print(average_rate_star_list)
-            # print(self.queryset)
+            
         tmp_restaurat_list = zip(restaurant_list, average_rate_list, average_rate_star_list, rate_num_list)
         tmp_list = (list(tmp_restaurat_list))
         tmp_list = sorted(tmp_list, reverse=True, key=lambda x:(x[1], x[3]))
@@ -75,8 +69,6 @@ class TopPageView(generic.ListView):
         context.update({
             'category_list': category_list,
             'new_restaurant_list': new_restaurant_list,
-            # 'restaurant_list': zip(self.queryset, average_rate_list, average_rate_star_list),
-            # 'restaurant_list': zip(restaurant_list, average_rate_list, average_rate_star_list),
             'restaurant_list': tmp_list,
         })
         return context
@@ -635,19 +627,9 @@ class RestaurantCreateView(mixins.OnlyStuffUserMixin, generic.CreateView):
         return reverse_lazy('top_page')
        
     def form_valid(self, form):
-        # user_instance = self.request.user
-        # restaurant_instance = models.Restaurant(id=self.kwargs['pk'])
-        # review = form.save(commit=False)
-        # review.restaurant = restaurant_instance
-        # review.user = user_instance
-        # review.save()
-        # self.success_url = reverse_lazy('review_list', kwargs={'pk':
-        # self.kwargs['pk']})
-        
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        
         return super().form_invalid(form)
         
 

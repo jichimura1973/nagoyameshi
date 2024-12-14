@@ -13,10 +13,6 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Category"
         
-        # constraints = [
-        #     models.UniqueConstraint(fields=['name'], name='unique_category_name')
-        # ]
-    
     def __str__(self):
          return self.name   
 
@@ -126,9 +122,6 @@ class FavoriteRestaurant(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['restaurant', 'user'], name='unique_favorite')
         ]
-
-    # def __str__(self):
-    #     return self.restaurant_id
 
 
 
